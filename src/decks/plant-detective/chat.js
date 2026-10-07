@@ -3,7 +3,7 @@ export default {
   id: 'chat',
   type: 'chat',
   fit: 'screen',
-  nav: '4. 问社长',
+  nav: '5. 问社长',
   data: {
     avatarImg: null,
     avatarLabel: '🎨 社长小绿形象贴纸',

@@ -3,6 +3,7 @@ import hero from './hero.js'
 import leaf from './leaf.js'
 import breakfast from './breakfast.js'
 import seed from './seed.js'
+import flower from './flower.js'
 import chat from './chat.js'
 import certificate from './certificate.js'
 
@@ -10,5 +11,5 @@ import certificate from './certificate.js'
 // 加内容 / 改内容只动这个目录；引擎与组件不用碰。
 export default {
   meta,
-  slides: [hero, leaf, breakfast, seed, chat, certificate],
+  slides: [hero, leaf, breakfast, seed, flower, chat, certificate],
 }

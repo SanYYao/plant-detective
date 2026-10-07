@@ -3,10 +3,12 @@ import { ref, computed } from 'vue'
 import { mdInline } from '../utils/md'
 import { useDeckState } from '../composables/useDeckState'
 import { useSound } from '../composables/useSound'
+import { useProgress } from '../composables/useProgress'
 
 const props = defineProps({ data: { type: Object, required: true } })
 const state = useDeckState()
 const { play } = useSound()
+const { unlock } = useProgress()
 
 // 尚未归位的食物 id
 const remaining = ref(props.data.foods.map((f) => f.id))
@@ -29,6 +31,7 @@ function place(organ) {
     play('pop')
     if (done.value) {
       state.solved.breakfast = true
+      unlock('breakfast')
       play('success')
     }
   } else {

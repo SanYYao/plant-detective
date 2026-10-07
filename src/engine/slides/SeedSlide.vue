@@ -3,10 +3,12 @@ import { ref, computed } from 'vue'
 import { mdInline } from '../utils/md'
 import { useDeckState } from '../composables/useDeckState'
 import { useSound } from '../composables/useSound'
+import { useProgress } from '../composables/useProgress'
 
 const props = defineProps({ data: { type: Object, required: true } })
 const state = useDeckState()
 const { play } = useSound()
+const { unlock } = useProgress()
 
 const cocklebur = ref({ hook: false, run: false })
 const dandelion = ref({ wind: 0 })
@@ -25,6 +27,7 @@ function checkDone() {
   const ok = cocklebur.value.hook && dandelion.value.wind > 60 && balsam.value.burst
   if (ok && !state.solved.seed) {
     state.solved.seed = true
+    unlock('seed')
     play('success')
   }
 }

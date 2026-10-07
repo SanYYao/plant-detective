@@ -3,11 +3,13 @@ import { ref, nextTick } from 'vue'
 import { useDeckState } from '../composables/useDeckState'
 import { useSound } from '../composables/useSound'
 import { useAI, localFallback } from '../composables/useAI'
+import { useProgress } from '../composables/useProgress'
 
 const props = defineProps({ data: { type: Object, required: true } })
 const state = useDeckState()
 const { play } = useSound()
 const { ask } = useAI()
+const { unlock } = useProgress()
 
 const messages = ref([{ role: 'bot', text: props.data.greeting }])
 const input = ref('')
@@ -43,6 +45,7 @@ async function send(q) {
     answer = await ask(query, state.pin)
   }
   if (!answer) answer = localFallback(query)
+  unlock('curious')
 
   thinking.value = false
   messages.value.push({ role: 'bot', text: answer })

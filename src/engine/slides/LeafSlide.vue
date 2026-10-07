@@ -3,10 +3,12 @@ import { ref, computed } from 'vue'
 import { mdInline } from '../utils/md'
 import { useDeckState } from '../composables/useDeckState'
 import { useSound } from '../composables/useSound'
+import { useProgress } from '../composables/useProgress'
 
 const props = defineProps({ data: { type: Object, required: true } })
 const state = useDeckState()
 const { play } = useSound()
+const { unlock } = useProgress()
 
 const season = ref(0)
 const showStomata = ref(false)
@@ -17,13 +19,13 @@ const stage = computed(() => {
 })
 
 function onSeasonInput() {
-  if (season.value > 66 && !state.solved.leaf) state.solved.leaf = true
+  if (season.value > 66 && !state.solved.leaf) { state.solved.leaf = true; unlock('leaf') }
 }
 
 function toggleStomata() {
   showStomata.value = !showStomata.value
   play('breeze')
-  if (showStomata.value) state.solved.leaf = true
+  if (showStomata.value) { state.solved.leaf = true; unlock('leaf') }
 }
 </script>
 
