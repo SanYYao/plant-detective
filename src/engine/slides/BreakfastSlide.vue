@@ -70,7 +70,7 @@ function onDrop(e, organ) {
         </span>
       </div>
 
-      <p class="text-xs sm:text-sm text-bark-800 font-medium mb-5">{{ data.intro }}</p>
+      <p class="text-xs sm:text-sm text-bark-800 font-semibold mb-5">{{ data.intro }}</p>
 
       <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
         <!-- 食物托盘 -->

@@ -91,7 +91,7 @@ function toggleStomata() {
 
           <div class="paper-card-sm p-4 bg-botanical-100 border-2 border-botanical-700">
             <h3 class="font-cute font-bold text-base text-botanical-900 mb-2">{{ data.notesTitle }}</h3>
-            <ul class="space-y-2 text-xs text-bark-800 font-medium leading-relaxed">
+            <ul class="space-y-2 text-xs text-bark-800 font-semibold leading-relaxed">
               <li v-for="(n, i) in data.notes" :key="i" class="flex items-start gap-2">
                 <span class="text-autumn-500 font-bold">{{ i + 1 }}.</span>
                 <span v-html="mdInline(n)"></span>
@@ -109,7 +109,7 @@ function toggleStomata() {
                 {{ data.microButton }}
               </button>
             </div>
-            <p v-if="showStomata" class="text-xs text-bark-800/80 mt-2 font-medium border-t border-bark-800/20 pt-2">
+            <p v-if="showStomata" class="text-xs text-bark-800/80 mt-2 font-semibold border-t border-bark-800/20 pt-2">
               {{ data.microAnswer }}
             </p>
           </div>

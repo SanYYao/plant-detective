@@ -65,7 +65,7 @@ function explode() {
         <span class="text-xs font-bold text-autumn-600 bg-autumn-400/10 px-3 py-1 rounded-full border border-autumn-400/30">{{ data.hint }}</span>
       </div>
 
-      <p class="text-xs sm:text-sm text-bark-800 font-medium mb-5">{{ data.intro }}</p>
+      <p class="text-xs sm:text-sm text-bark-800 font-semibold mb-5">{{ data.intro }}</p>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
         <!-- 苍耳 -->
@@ -79,7 +79,7 @@ function explode() {
               <img v-if="exp.cocklebur.img" :src="exp.cocklebur.img" class="w-full h-full object-cover" />
               <span v-else class="text-[9px] text-bark-800/50 font-bold">{{ exp.cocklebur.illustration }}</span>
             </div>
-            <p class="text-xs text-bark-800/80 leading-relaxed mb-3 font-medium">{{ exp.cocklebur.desc }}</p>
+            <p class="text-xs text-bark-800/80 leading-relaxed mb-3 font-semibold">{{ exp.cocklebur.desc }}</p>
 
             <div class="w-full h-28 bg-paper-200 border-2 border-bark-800 rounded-xl relative overflow-hidden my-2 select-none">
               <div class="absolute left-2 bottom-3 text-3xl transition-all duration-1000 ease-in-out" :style="{ transform: cocklebur.run ? 'translateX(180px)' : 'none' }">🐕</div>
@@ -103,7 +103,7 @@ function explode() {
               <img v-if="exp.dandelion.img" :src="exp.dandelion.img" class="w-full h-full object-cover" />
               <span v-else class="text-[9px] text-bark-800/50 font-bold">{{ exp.dandelion.illustration }}</span>
             </div>
-            <p class="text-xs text-bark-800/80 leading-relaxed mb-3 font-medium">{{ exp.dandelion.desc }}</p>
+            <p class="text-xs text-bark-800/80 leading-relaxed mb-3 font-semibold">{{ exp.dandelion.desc }}</p>
 
             <div class="w-full h-28 bg-paper-200 border-2 border-bark-800 rounded-xl relative overflow-hidden my-2 select-none">
               <span class="text-4xl absolute bottom-2 left-5">🌱</span>
@@ -139,7 +139,7 @@ function explode() {
               <img v-if="exp.balsam.img" :src="exp.balsam.img" class="w-full h-full object-cover" />
               <span v-else class="text-[9px] text-bark-800/50 font-bold">{{ exp.balsam.illustration }}</span>
             </div>
-            <p class="text-xs text-bark-800/80 leading-relaxed mb-3 font-medium">{{ exp.balsam.desc }}</p>
+            <p class="text-xs text-bark-800/80 leading-relaxed mb-3 font-semibold">{{ exp.balsam.desc }}</p>
 
             <div class="w-full h-28 bg-paper-200 border-2 border-bark-800 rounded-xl relative overflow-hidden my-2 select-none flex items-center justify-center">
               <div class="text-3xl cursor-pointer transition-transform duration-200 hover:scale-110" :class="balsam.burst ? 'scale-125' : ''" @click="explode">

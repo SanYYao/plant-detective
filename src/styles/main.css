@@ -101,3 +101,17 @@ body {
   body.print-cert-only .slide:not([data-slide='certificate']) { display: none !important; }
   body.print-cert-only .slide[data-slide='certificate'] { page-break-after: auto; }
 }
+
+/* ── 可读性（投影 / 远距离观看）：整体加重一档 ── */
+body { font-weight: 500; }
+
+/* 糖圆体是单字重字体（没有真粗体），用四向细描边模拟加粗，
+   远距离或投影下更清楚；比 -webkit-text-stroke 兼容性更好 */
+.font-cute {
+  text-shadow:
+    0.7px 0 0 currentColor,
+    -0.7px 0 0 currentColor,
+    0 0.7px 0 currentColor,
+    0 -0.7px 0 currentColor;
+  letter-spacing: 0.01em;
+}

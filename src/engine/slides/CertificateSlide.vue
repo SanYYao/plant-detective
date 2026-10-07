@@ -29,12 +29,12 @@ function doPrint() {
           {{ data.nameLabel }}
           <span class="text-autumn-600 underline text-lg font-black px-1">{{ state.detectiveName || data.nameDefault }}</span>
         </p>
-        <p class="text-xs text-bark-800/80 leading-relaxed font-medium">{{ data.body }}</p>
+        <p class="text-xs text-bark-800/80 leading-relaxed font-semibold">{{ data.body }}</p>
       </div>
 
       <div class="paper-card-sm p-4 bg-botanical-900 text-paper-50 text-left max-w-lg mx-auto mb-5 space-y-2">
         <h4 class="font-bold text-autumn-400 text-sm">{{ data.homeworkTitle }}</h4>
-        <ul class="text-xs space-y-1.5 pl-5 list-disc font-medium text-paper-100/90 leading-relaxed">
+        <ul class="text-xs space-y-1.5 pl-5 list-disc font-semibold text-paper-100/90 leading-relaxed">
           <li v-for="(h, i) in data.homework" :key="i" v-html="mdInline(h)"></li>
         </ul>
       </div>

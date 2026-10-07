@@ -63,7 +63,7 @@ async function activate() {
       {{ data.title }}
     </h1>
 
-    <p class="max-w-2xl mx-auto text-base sm:text-xl text-bark-800 font-medium mb-10 leading-relaxed">
+    <p class="max-w-2xl mx-auto text-base sm:text-xl text-bark-800 font-semibold mb-10 leading-relaxed">
       {{ data.subtitle }}
     </p>
 
@@ -87,7 +87,7 @@ async function activate() {
           <span class="tag-stamp text-xs font-cute">{{ data.form.step }}</span>
           <h3 class="font-cute font-bold text-lg text-botanical-900">{{ data.form.title }}</h3>
         </div>
-        <p class="text-xs text-bark-800/80 mb-4 font-medium">{{ data.form.hint }}</p>
+        <p class="text-xs text-bark-800/80 mb-4 font-semibold">{{ data.form.hint }}</p>
 
         <div class="space-y-3">
           <div class="flex gap-2">

@@ -70,7 +70,7 @@ function locked() {
           </div>
 
           <h3 class="font-cute font-black text-2xl text-botanical-900">{{ data.name }}</h3>
-          <p class="text-xs text-bark-800/80 font-medium mt-1 max-w-xs">{{ data.desc }}</p>
+          <p class="text-xs text-bark-800/80 font-semibold mt-1 max-w-xs">{{ data.desc }}</p>
 
           <div class="w-full mt-4 space-y-2 text-left">
             <span class="text-[10px] font-bold text-autumn-500 uppercase tracking-widest block">{{ data.quickLabel }}</span>
@@ -91,7 +91,7 @@ function locked() {
           <div v-if="locked()" class="absolute inset-0 z-30 bg-paper-100/95 rounded-2xl flex flex-col items-center justify-center text-center px-6 gap-2">
             <div class="text-4xl">🔒</div>
             <p class="font-cute font-bold text-botanical-900 text-lg">{{ data.lockedTitle }}</p>
-            <p class="text-xs text-bark-800/80 font-medium leading-relaxed max-w-xs">{{ data.lockedBody }}</p>
+            <p class="text-xs text-bark-800/80 font-semibold leading-relaxed max-w-xs">{{ data.lockedBody }}</p>
           </div>
 
           <p v-if="IS_OFFLINE" class="text-[10px] font-bold text-botanical-700 bg-botanical-100 border border-botanical-700/30 rounded-lg px-2 py-1 mb-2">
@@ -104,7 +104,7 @@ function locked() {
                 {{ m.role === 'user' ? '🕵️' : '🌱' }}
               </div>
               <div
-                class="p-3 rounded-2xl border-2 border-bark-800 text-xs sm:text-sm font-medium max-w-[85%] leading-relaxed shadow-[2px_2px_0px_#3d2612]"
+                class="p-3 rounded-2xl border-2 border-bark-800 text-xs sm:text-sm font-semibold max-w-[85%] leading-relaxed shadow-[2px_2px_0px_#3d2612]"
                 :class="m.role === 'user' ? 'bg-autumn-400/20 text-botanical-900 rounded-tr-none' : 'bg-paper-50 text-botanical-900 rounded-tl-none'"
               >
                 {{ m.text }}
