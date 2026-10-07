@@ -57,10 +57,16 @@ plant-detective/
 ```bash
 npm install
 
-npm run dev            # 开发预览（热更新）
+npm run dev            # ① 只调 UI（热更新，http://localhost:5173）
+npm run dev:cf         # ② 连 AI / PIN 一起调（跑 Pages Functions，http://localhost:8788）
 npm run build          # 在线版 → dist/（含 AI 问答，部署 CF Pages）
 npm run build:offline  # 离线版 → dist-offline/index.html（单文件，无 AI 无音效，双击即用）
 ```
+
+> ⚠️ **`npm run dev`（Vite）不会执行 `functions/` 目录**，所以这个模式下 AI 问答和 PIN 认证都不可用
+> （AI 会静默走本地知识库兜底，容易误判成"PIN 不对"）。
+> 要本地测 AI：先 `cp .dev.vars.example .dev.vars` 填入密钥，再跑 `npm run dev:cf`。
+> `.dev.vars` 已在 `.gitignore` 里，密钥绝不进仓库。
 
 ## 键盘与手势
 
@@ -81,7 +87,7 @@ npm run build:offline  # 离线版 → dist-offline/index.html（单文件，无
 2. 构建设置：**Build command** = `npm run build`，**Build output directory** = `dist`。
 3. 环境变量（Settings → Environment variables）：
    - `OPENROUTER_KEY` —— OpenRouter API key（不进代码库）
-   - `AI_PIN` —— 小绿认证编号（默认 `022732`）
+   - `AI_PIN` —— 小绿认证编号（6 位数字，只填在这里，代码与前端都不出现）
    - `AI_MODEL` —— 可选，默认 `google/gemini-3-flash`
 4. `functions/` 自动变成同源接口，国内访问无需额外代理。
 

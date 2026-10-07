@@ -5,7 +5,7 @@
 //
 // 部署环境变量（CF 后台 / wrangler.toml，绝不进代码库、绝不进前端）：
 //   OPENROUTER_KEY  — OpenRouter API key
-//   AI_PIN          — 小绿认证编号（默认 022732）
+//   AI_PIN          — 小绿认证编号（6 位数字，只写在环境变量里，绝不进代码库）
 //   AI_MODEL        — 可选，默认 google/gemini-3-flash（聊天模型，非生图模型）
 
 const CORS = {
@@ -35,7 +35,7 @@ export const onRequestOptions = () => new Response(null, { status: 204, headers:
 export const onRequestPost = async ({ request, env }) => {
   if (request.method === 'OPTIONS') return new Response(null, { status: 204, headers: CORS });
 
-  const expectedPin = env.AI_PIN || '022732';
+  const expectedPin = env.AI_PIN;
   const key = env.OPENROUTER_KEY;
   const model = env.AI_MODEL || 'google/gemini-3-flash';
 
@@ -48,6 +48,14 @@ export const onRequestPost = async ({ request, env }) => {
 
   const pin = (body && body.pin || '').toString().trim();
   const message = (body && body.message || '').toString().slice(0, 300).trim();
+
+  // 环境变量没配：直接降级（也避免 Buffer.from(undefined) 抛错）
+  if (!expectedPin) {
+    return new Response(
+      JSON.stringify({ reply: '（小绿还没配好认证编号，先给你本地答案哦）', authorized: false }),
+      { status: 200, headers: CORS }
+    );
+  }
 
   // PIN 校验（边缘端）：不通过则直接降级，绝不调用 OpenRouter
   if (!timingSafeEqual(Buffer.from(pin), Buffer.from(expectedPin))) {

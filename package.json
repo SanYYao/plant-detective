@@ -6,6 +6,7 @@
   "description": "通用课件引擎 + 内容包（首个内容包：秋天植物侦探社）",
   "scripts": {
     "dev": "TERMINAL=kitty vite",
+    "dev:cf": "vite build && wrangler pages dev dist --compatibility-date=2026-10-01 --port 8788",
     "build": "vite build",
     "build:offline": "vite build --mode offline",
     "preview": "vite preview"
@@ -20,6 +21,7 @@
     "tailwindcss": "^3.4.19",
     "vite": "^8.3.3",
     "vite-plugin-singlefile": "^2.3.3",
-    "vite-plugin-vue-devtools": "^8.2.1"
+    "vite-plugin-vue-devtools": "^8.2.1",
+    "wrangler": "^4.148.0"
   }
 }

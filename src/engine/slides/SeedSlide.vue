@@ -13,6 +13,9 @@ const { unlock } = useProgress()
 const cocklebur = ref({ hook: false, run: false })
 const dandelion = ref({ wind: 0 })
 const balsam = ref({ burst: false })
+// 三个实验的「已做过」持久标记：上面的动画状态几秒后会自动归零，
+// 判定必须用这三个，否则一件件做实验永远凑不齐（原时序 bug）
+const done = ref({ cocklebur: false, dandelion: false, balsam: false })
 
 const windLabel = computed(() => {
   const w = dandelion.value.wind
@@ -24,7 +27,7 @@ const windLabel = computed(() => {
 const exp = computed(() => Object.fromEntries(props.data.experiments.map((e) => [e.id, e])))
 
 function checkDone() {
-  const ok = cocklebur.value.hook && dandelion.value.wind > 60 && balsam.value.burst
+  const ok = done.value.cocklebur && done.value.dandelion && done.value.balsam
   if (ok && !state.solved.seed) {
     state.solved.seed = true
     unlock('seed')
@@ -35,6 +38,7 @@ function checkDone() {
 function runCocklebur() {
   play('pop')
   cocklebur.value.hook = true
+  done.value.cocklebur = true
   setTimeout(() => { cocklebur.value.run = true }, 500)
   checkDone()
   setTimeout(() => { cocklebur.value.run = false; cocklebur.value.hook = false }, 3600)
@@ -42,7 +46,10 @@ function runCocklebur() {
 
 function onWind() {
   const w = dandelion.value.wind
-  if (w > 20) { play('pop'); if (w > 60) checkDone() }
+  if (w > 20) {
+    play('pop')
+    if (w > 60) { done.value.dandelion = true; checkDone() }
+  }
 }
 function blowStrong() {
   dandelion.value.wind = 85
@@ -52,7 +59,8 @@ function blowStrong() {
 function explode() {
   play('success')
   balsam.value.burst = true
-  setTimeout(() => { if (!state.solved.seed) { balsam.value.burst = false } }, 2600)
+  done.value.balsam = true
+  setTimeout(() => { balsam.value.burst = false }, 2600)
   checkDone()
 }
 </script>

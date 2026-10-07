@@ -19,7 +19,11 @@ function timingSafeEqual(a, b) {
 export const onRequestOptions = () => new Response(null, { status: 204, headers: CORS });
 
 export const onRequestPost = async ({ request, env }) => {
-  const expected = env.AI_PIN || '022732';
+  const expected = env.AI_PIN;
+  if (!expected) {
+    // 环境变量没配：明确拒绝（绝不硬编码 PIN 兜底——代码会进公开仓库）
+    return new Response(JSON.stringify({ authorized: false, reason: 'server_not_configured' }), { status: 200, headers: CORS });
+  }
   let pin = '';
   try {
     const b = await request.json();
