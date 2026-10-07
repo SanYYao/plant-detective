@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="scroll-smooth">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《秋天植物侦探社》—— 45分钟自然探秘交互手记课件</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          paper: { 50: '#fcfbf7', 100: '#f7f4eb', 200: '#efe8d8', 300: '#e2d5bd' },
+          botanical: { 900: '#1b3022', 800: '#274731', 700: '#345e41', 500: '#4e8760', 100: '#e5f0e8' },
+          autumn: { 400: '#fb8b24', 500: '#e36414', 600: '#9a031e', 700: '#5f0f40' },
+          bark: { 800: '#3d2612', 600: '#6f4520', 100: '#f0e6df' }
+        },
+        fontFamily: {
+          serif: ['"Noto Serif SC"', '"Songti SC"', 'STSong', 'serif'],
+          sans: ['"Plus Jakarta Sans"', '"PingFang SC"', '"Microsoft YaHei"', 'sans-serif']
+        }
+      }
+    }
+  }
+</script>
+<style>
+  /* 可爱字体：猫啃网糖圆体（本地化，断网可用），仅用于 .font-cute 点睛，避免满屏圆体审美疲劳 */
+  @font-face {
+    font-family: 'TangYuan';
+    src: url('assets/fonts/tangyuan.woff2') format('woff2'),
+         url('assets/fonts/tangyuan.ttf') format('truetype');
+    font-weight: 400 900;
+    font-display: swap;
+  }
+  .font-cute {
+    font-family: 'TangYuan', 'PingFang SC', 'Microsoft YaHei', 'STSong', serif;
+  }
+
+  /* Journal & tactile paper styling */
+  body {
+    background-color: #f7f4eb;
+    background-image: radial-gradient(#345e41 0.75px, transparent 0.75px), radial-gradient(#345e41 0.75px, #f7f4eb 0.75px);
+    background-size: 30px 30px;
+    background-position: 0 0, 15px 15px;
+    background-opacity: 0.05;
+  }
+
+  .paper-card {
+    background: #fcfbf7;
+    border: 2px solid #3d2612;
+    box-shadow: 6px 6px 0px #3d2612;
+    border-radius: 1.25rem;
+  }
+
+  .paper-card-sm {
+    background: #fcfbf7;
+    border: 1.5px solid #3d2612;
+    box-shadow: 3px 3px 0px #3d2612;
+    border-radius: 0.85rem;
+  }
+
+  .tag-stamp {
+    background-color: #e36414;
+    color: #fcfbf7;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.5rem;
+    box-shadow: 2px 2px 0px #3d2612;
+  }
+
+  /* Custom Interactive Cursor */
+  #journal-cur {
+    pointer-events: none;
+    transition: transform 0.12s cubic-bezier(0.1, 0.8, 0.2, 1), width 0.15s, height 0.15s;
+  }
+  .cur-expanded {
+    transform: scale(2);
+    background-color: rgba(227, 100, 20, 0.2) !important;
+    border-color: #e36414 !important;
+  }
+
+  /* Smooth Custom Scrollbar */
+  ::-webkit-scrollbar { width: 10px; }
+  ::-webkit-scrollbar-track { background: #f7f4eb; }
+  ::-webkit-scrollbar-thumb { background: #345e41; border-radius: 5px; border: 2px solid #f7f4eb; }
+  ::-webkit-scrollbar-thumb:hover { background: #e36414; }
+
+  /* Draggable Item Styles */
+  .drag-food-item {
+    cursor: grab;
+    user-select: none;
+    touch-action: none;
+  }
+  .drag-food-item:active {
+    cursor: grabbing;
+    transform: scale(1.05);
+  }
+
+  @keyframes floatSlow {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    50% { transform: translateY(-8px) rotate(2deg); }
+  }
+  .animate-float { animation: floatSlow 4s ease-in-out infinite; }
+</style>
+</head>
+<body class="text-bark-800 font-sans antialiased overflow-x-hidden selection:bg-autumn-400 selection:text-paper-50">
+
+<!-- Dynamic FX Background Canvas -->
+<canvas id="autumn-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-70"></canvas>
+
+<!-- Custom Hand Cursor -->
+<div id="journal-cur" class="fixed left-0 top-0 w-7 h-7 rounded-full border-2 border-botanical-800 z-50 -translate-x-1/2 -translate-y-1/2 hidden md:block"></div>
+
+<!-- Top Navigation & Lesson Timeline Progress Bar -->
+<header class="fixed top-3 left-1/2 -translate-x-1/2 z-40 w-[94%] max-w-6xl">
+  <div class="paper-card px-5 py-3 flex flex-wrap items-center justify-between gap-3">
+    <!-- Brand Title -->
+    <div class="flex items-center gap-3 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+      <div class="w-10 h-10 rounded-xl bg-botanical-700 text-paper-50 border-2 border-bark-800 flex items-center justify-center font-bold text-xl shadow-[2px_2px_0px_#3d2612]">
+        🍂
+      </div>
+      <div>
+        <span class="font-cute font-black text-lg tracking-wide text-botanical-900 block leading-tight">植物侦探社</span>
+        <span class="text-[10px] text-autumn-500 font-bold tracking-widest uppercase">3rd Grade Autumn Lesson</span>
+      </div>
+    </div>
+
+    <!-- Classroom Progress Bar -->
+    <div class="hidden md:flex items-center gap-2 text-xs font-bold text-bark-800">
+      <a href="#case-1" class="hover:text-autumn-500 transition px-2 py-1 rounded-md hover:bg-paper-200">1. 叶黄谜案</a>
+      <span>→</span>
+      <a href="#case-2" class="hover:text-autumn-500 transition px-2 py-1 rounded-md hover:bg-paper-200">2. 早餐器官</a>
+      <span>→</span>
+      <a href="#case-3" class="hover:text-autumn-500 transition px-2 py-1 rounded-md hover:bg-paper-200">3. 种子便车</a>
+      <span>→</span>
+      <a href="#ai-mascot" class="hover:text-autumn-500 transition px-2 py-1 rounded-md hover:bg-paper-200">4. 问社长</a>
+    </div>
+
+    <!-- Right Quick Actions -->
+    <div class="flex items-center gap-2">
+      <!-- Synthesized Sound Toggle -->
+      <button id="sound-toggle-btn" class="px-3 py-1.5 rounded-lg border-1.5 border-bark-800 bg-paper-100 hover:bg-paper-200 text-xs font-bold flex items-center gap-1.5 transition shadow-[2px_2px_0px_#3d2612]">
+        <span id="sound-state-icon">🔇</span>
+        <span class="hidden sm:inline">环境声音</span>
+      </button>
+
+      <!-- Jump to Badge Certificate -->
+      <a href="#certificate-section" class="px-3.5 py-1.5 rounded-lg bg-autumn-500 text-paper-50 font-bold text-xs hover:bg-autumn-600 transition shadow-[2px_2px_0px_#3d2612] flex items-center gap-1">
+        <span>📜</span> 侦探证
+      </a>
+    </div>
+  </div>
+</header>
+
+<main class="relative z-10 space-y-24 pt-28 pb-20">
+
+  <!-- HERO SECTION -->
+  <section class="min-h-[85vh] flex flex-col items-center justify-center px-6 text-center relative max-w-5xl mx-auto">
+    
+    <!-- 🎨 装饰贴纸占位 01（无画框/透明PNG贴纸）：松鼠侦探 -->
+    <div class="absolute -top-4 left-4 lg:left-12 hidden md:block w-32 h-32 pointer-events-none z-20 animate-float">
+      <div class="relative w-full h-full group">
+        <img src="https://placehold.co/200x200/fb8b24/ffffff?text=Squirrel+Detective" alt="松鼠侦探装饰贴纸" class="w-full h-full object-contain filter drop-shadow-[3px_5px_0px_rgba(61,38,18,0.3)]">
+        <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-autumn-500 text-paper-50 text-[9px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap shadow border border-bark-800">
+          🎨 装饰贴纸：拿着放大镜的松鼠侦探 (建议透明PNG)
+        </div>
+      </div>
+    </div>
+
+    <!-- 🎨 装饰贴纸占位 02（无画框/透明PNG贴纸）：橡果与枫叶组合 -->
+    <div class="absolute top-1/3 right-4 lg:right-10 hidden md:block w-28 h-28 pointer-events-none z-20 animate-float" style="animation-delay: 1.5s;">
+      <div class="relative w-full h-full">
+        <img src="https://placehold.co/180x180/e36414/ffffff?text=Autumn+Leaves" alt="秋叶装饰贴纸" class="w-full h-full object-contain filter drop-shadow-[3px_5px_0px_rgba(61,38,18,0.2)]">
+        <div class="absolute -bottom-2 left-1/2 -translate-x-1/2 bg-botanical-700 text-paper-50 text-[9px] font-bold px-2 py-0.5 rounded-full whitespace-nowrap shadow border border-bark-800">
+          🎨 装饰贴纸：橡果与堆叠枫叶
+        </div>
+      </div>
+    </div>
+
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-botanical-100 border-2 border-botanical-700 text-botanical-900 text-xs font-bold mb-6 shadow-[2px_2px_0px_#1b3022]">
+      <span>🔍</span> 小学科学三级上册 · 45分钟观察与推理手记课件
+    </div>
+
+    <h1 class="font-cute font-black text-5xl sm:text-7xl md:text-8xl text-botanical-900 tracking-tight mb-6 leading-none">
+      秋天植物侦探社
+    </h1>
+
+    <p class="max-w-2xl text-base sm:text-xl text-bark-800 font-medium mb-10 leading-relaxed">
+      自然是最好的探案现场。用放大镜观察叶片厨房，去早饭里找器官，破解种子的无声旅行法！
+    </p>
+
+    <!-- Hero Content & Entry Form Layout Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl text-left items-stretch">
+      
+      <!-- 🎨 带画框插画卡片：侦探装备包 -->
+      <div class="paper-card p-5 bg-paper-100 border-2 border-bark-800 flex flex-col justify-between relative group overflow-hidden">
+        <div class="flex items-center justify-between mb-2">
+          <span class="tag-stamp text-[10px] font-cute">EQUIPMENT</span>
+          <span class="text-[10px] font-bold text-autumn-600 bg-autumn-400/20 px-2 py-0.5 rounded">AI画框图画</span>
+        </div>
+        
+        <div class="relative w-full h-40 rounded-xl overflow-hidden border-2 border-dashed border-bark-800 bg-paper-200 flex flex-col items-center justify-center p-2 text-center my-2">
+          <img src="https://placehold.co/400x300/f0e6df/3d2612?text=Detective+Kit+Illustration" alt="侦探包插画" class="w-full h-full object-cover rounded-lg">
+          <div class="absolute inset-0 bg-botanical-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center p-3 text-paper-50 text-xs">
+            <p class="font-bold mb-1">💡 AI 绘图提示词建议：</p>
+            <p class="text-[10px] leading-tight text-paper-200">"Cute watercolor illustration of detective tools, magnifying glass, leaf notebook, acorn badge, autumn colors, hand-drawn vector sticker, white background"</p>
+          </div>
+        </div>
+        <p class="text-[11px] font-bold text-bark-800/80 text-center">🖼️ 插画占位：植物侦探出勤装备包</p>
+      </div>
+
+      <!-- Detective Entry Form Card -->
+      <div class="paper-card p-6 sm:p-8 text-left relative overflow-hidden flex flex-col justify-between">
+        <div class="absolute -right-6 -top-6 w-20 h-20 bg-autumn-400/20 rounded-full blur-xl pointer-events-none"></div>
+        
+        <div>
+          <div class="flex items-center gap-2 mb-3">
+            <span class="tag-stamp text-xs font-cute">STEP 01</span>
+            <h3 class="font-cute font-bold text-lg text-botanical-900">侦探报到登记</h3>
+          </div>
+          <p class="text-xs text-bark-800/80 mb-4 font-medium">输入你的侦探名字，领取今日探案工具与手记：</p>
+        </div>
+
+        <div class="space-y-3">
+          <div class="flex gap-2">
+            <input type="text" id="detective-name-field" placeholder="例如：枫叶侦探小明" class="flex-1 px-4 py-2.5 rounded-xl border-2 border-bark-800 bg-paper-50 text-botanical-900 font-bold focus:outline-none focus:ring-2 focus:ring-autumn-500 text-sm">
+            <button id="entry-confirm-btn" class="px-5 py-2.5 rounded-xl bg-botanical-700 hover:bg-botanical-800 text-paper-50 font-bold text-sm shadow-[3px_3px_0px_#3d2612] transition flex items-center gap-1 shrink-0">
+              领证受命 🚀
+            </button>
+          </div>
+          <!-- 小绿认证编号（PIN）：认证通过才能用 AI 对话；错误不影响后续游玩 -->
+          <div class="flex gap-2 items-center">
+            <input type="password" id="ai-pin-field" inputmode="numeric" placeholder="小绿认证编号（选填）" class="flex-1 px-4 py-2.5 rounded-xl border-2 border-bark-800 bg-paper-50 text-botanical-900 font-bold focus:outline-none focus:ring-2 focus:ring-autumn-500 text-sm">
+            <button id="ai-auth-btn" type="button" class="px-4 py-2.5 rounded-xl bg-autumn-500 hover:bg-autumn-600 text-paper-50 font-bold text-xs shadow-[3px_3px_0px_#3d2612] transition shrink-0">
+              激活小绿 🔑
+            </button>
+          </div>
+          <div id="ai-auth-msg" class="text-[11px] font-bold hidden pt-0.5"></div>
+
+          <div id="entry-success-msg" class="text-xs text-botanical-700 font-bold hidden flex items-center gap-1 pt-1">
+            <span>✅</span> 登记成功！侦探案件卷宗已解锁，向下滑动开始破案。
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Down Scroll Indicator -->
+    <a href="#case-1" class="mt-12 inline-flex flex-col items-center gap-2 text-xs font-bold text-botanical-700 hover:text-autumn-500 transition">
+      <span>滑动展开：案件一 · 变黄的叶子</span>
+      <div class="w-6 h-10 rounded-full border-2 border-bark-800 flex justify-center pt-2 bg-paper-50 shadow-[2px_2px_0px_#3d2612]">
+        <div class="w-1.5 h-2.5 bg-autumn-500 rounded-full animate-bounce"></div>
+      </div>
+    </a>
+  </section>
+
+  <!-- CASE 01: LEAF CHLOROPHYLL INSPECTOR -->
+  <section id="case-1" class="max-w-5xl mx-auto px-6 scroll-mt-24">
+    <div class="paper-card p-6 sm:p-10 relative">
+      
+      <!-- Case Header -->
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b-2 border-bark-800/20 mb-8">
+        <div class="flex items-center gap-3">
+          <span class="tag-stamp font-cute">CASE #01</span>
+          <h2 class="font-cute font-black text-2xl sm:text-4xl text-botanical-900">案件一：叶子为什么变黄了？</h2>
+        </div>
+        <div class="text-xs font-bold text-autumn-600 bg-autumn-400/10 px-3 py-1 rounded-full border border-autumn-400/30">
+          ⏱ 建议破案时间：10 分钟
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <!-- Interactive Leaf Micro-Inspector -->
+        <div class="lg:col-span-7 bg-paper-200 border-2 border-bark-800 rounded-2xl p-6 relative flex flex-col items-center">
+          
+          <!-- 🎨 装饰贴纸占位（无画框/透明PNG）：叶绿素小厨师 -->
+          <div class="absolute -top-6 -right-3 w-24 h-24 z-20 pointer-events-none hidden sm:block">
+            <img src="https://placehold.co/150x150/345e41/ffffff?text=Chef+Leaf" alt="叶绿素小厨师贴纸" class="w-full h-full object-contain filter drop-shadow-[2px_4px_0px_rgba(0,0,0,0.25)]">
+            <span class="absolute bottom-0 right-0 bg-botanical-800 text-paper-50 text-[8px] font-bold px-1.5 py-0.5 rounded border border-bark-800">🎨 无框贴纸：叶子厨师</span>
+          </div>
+
+          <div class="w-full flex items-center justify-between text-xs font-bold text-botanical-900 mb-2">
+            <span>🔬 显微透视视角：阳光厨房原理</span>
+            <span id="season-label-indicator" class="text-autumn-600 font-extrabold">盛夏状态 (厨房全开)</span>
+          </div>
+
+          <!-- Dynamic SVG Leaf Anatomy -->
+          <div class="relative w-64 h-64 sm:w-72 sm:h-72 my-4 flex items-center justify-center">
+            <svg id="interactive-leaf-svg" class="w-full h-full filter drop-shadow-[4px_6px_0px_rgba(61,38,18,0.2)] transition-all duration-300" viewBox="0 0 200 200">
+              <defs>
+                <linearGradient id="leaf-grad-body" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop id="leaf-stop-1" offset="0%" stop-color="#345e41" />
+                  <stop id="leaf-stop-2" offset="100%" stop-color="#1b3022" />
+                </linearGradient>
+              </defs>
+              <!-- Leaf Outline -->
+              <path d="M100,15 C160,55 185,120 100,185 C15,120 40,55 100,15 Z" fill="url(#leaf-grad-body)" stroke="#3d2612" stroke-width="4" />
+              <!-- Leaf Veins -->
+              <path d="M100,185 L100,20 M100,140 L145,110 M100,100 L155,70 M100,60 L135,40 M100,140 L55,110 M100,100 L45,70 M100,60 L65,40" stroke="#3d2612" stroke-width="3" stroke-linecap="round" opacity="0.3" fill="none" />
+            </svg>
+
+            <!-- Micro-Chef Chlorophyll Icons Floating overlay -->
+            <div id="chlorophyll-kitchen" class="absolute inset-0 pointer-events-none flex items-center justify-center">
+              <span id="chef-1" class="text-3xl animate-bounce absolute top-12 left-16 transition-opacity duration-300">👨‍🍳</span>
+              <span id="chef-2" class="text-2xl animate-pulse absolute bottom-16 right-16 transition-opacity duration-300">☀️</span>
+              <span id="pigment-yellow" class="text-3xl absolute top-20 right-16 opacity-0 transition-opacity duration-500">🍁</span>
+            </div>
+          </div>
+
+          <!-- Season Slider Bar -->
+          <div class="w-full max-w-md space-y-2 mt-2">
+            <div class="flex justify-between text-xs font-bold text-bark-800">
+              <span>🌱 盛夏 (光照强/温度高)</span>
+              <span>🍂 深秋 (天冷/光照少)</span>
+            </div>
+            <input type="range" id="season-control-slider" min="0" max="100" value="0" class="w-full h-3 bg-paper-50 rounded-lg border-2 border-bark-800 appearance-none cursor-pointer accent-autumn-500">
+          </div>
+        </div>
+
+        <!-- Botanical Detective Notes -->
+        <div class="lg:col-span-5 space-y-5">
+          
+          <!-- 🎨 带画框卡片：阳光厨房工作图 -->
+          <div class="paper-card-sm p-3 bg-paper-50 border-2 border-bark-800">
+            <div class="relative w-full h-32 rounded-lg overflow-hidden border border-dashed border-bark-800 bg-paper-200">
+              <img src="https://placehold.co/400x200/efe8d8/3d2612?text=Chlorophyll+Factory+Illustration" alt="叶绿素阳光工厂" class="w-full h-full object-cover">
+              <div class="absolute top-1 left-1 bg-autumn-500 text-paper-50 text-[9px] font-bold px-1.5 py-0.5 rounded shadow">
+                🖼️ AI插画：叶绿素厨师做阳光能量面包
+              </div>
+            </div>
+            <p class="text-[10px] text-bark-800/70 font-bold text-center mt-1">Prompt: "Cute leaf shaped chef baking sunlight in a forest kitchen, fairytale picture book illustration"</p>
+          </div>
+
+          <div class="paper-card-sm p-5 bg-botanical-100 border-2 border-botanical-700">
+            <h3 class="font-serif font-bold text-lg text-botanical-900 mb-2 flex items-center gap-2">
+              <span>💡</span> 破案侦探笔记：
+            </h3>
+            <ul class="space-y-2.5 text-xs sm:text-sm text-bark-800 font-medium leading-relaxed">
+              <li class="flex items-start gap-2">
+                <span class="text-autumn-500 font-bold">1.</span>
+                <span>树叶是植物的<strong class="text-botanical-900">“阳光厨房”</strong>，绿色的叶绿素像厨师一样用阳光制作能量食物。</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-autumn-500 font-bold">2.</span>
+                <span>到了深秋，天冷光照变少，“厨房”决定打烊休息，叶绿素慢慢退场分解。</span>
+              </li>
+              <li class="flex items-start gap-2">
+                <span class="text-autumn-500 font-bold">3.</span>
+                <span>一直藏在叶子里的黄色素（胡萝卜素/叶黄素）显露出来，叶子就变黄脱落啦！</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Stomata Breathing Micro-Interaction -->
+          <div class="paper-card-sm p-4 bg-paper-50">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-bold text-autumn-500 uppercase tracking-wider">互动微小实验</span>
+                <p class="text-xs font-bold text-botanical-900 mt-0.5">点击让叶片气孔（Stomata）进行呼吸：</p>
+              </div>
+              <button id="stomata-toggle-btn" class="px-3 py-1.5 rounded-lg bg-botanical-700 text-paper-50 text-xs font-bold hover:bg-botanical-800 transition shadow-[2px_2px_0px_#3d2612]">
+                气孔呼吸 💨
+              </button>
+            </div>
+            <p id="stomata-desc" class="text-xs text-bark-800/80 mt-2 font-medium hidden border-t border-bark-800/20 pt-2">
+              🍃 叶片背面的微小孔隙像鼻孔一样吸入二氧化碳、呼出氧气，还能蒸发水分！
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE 02: BREAKFAST BOTANICAL ORGANS MATCHING -->
+  <section id="case-2" class="max-w-5xl mx-auto px-6 scroll-mt-24">
+    <div class="paper-card p-6 sm:p-10 relative">
+      
+      <!-- 🎨 装饰贴纸占位（无画框/透明PNG）：餐桌野餐小狐狸 -->
+      <div class="absolute -top-8 right-8 w-28 h-28 pointer-events-none hidden md:block z-20">
+        <img src="https://placehold.co/180x180/fb8b24/ffffff?text=Fox+Picnic" alt="小狐狸野餐" class="w-full h-full object-contain filter drop-shadow-[3px_4px_0px_rgba(61,38,18,0.25)]">
+        <span class="absolute -bottom-1 left-0 bg-autumn-500 text-paper-50 text-[8px] font-bold px-1.5 py-0.5 rounded border border-bark-800 whitespace-nowrap">🎨 无框贴纸：小狐狸在野餐</span>
+      </div>
+
+      <!-- Case Header -->
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b-2 border-bark-800/20 mb-6">
+        <div class="flex items-center gap-3">
+          <span class="tag-stamp font-cute">CASE #02</span>
+          <h2 class="font-cute font-black text-2xl sm:text-4xl text-botanical-900">案件二：我早饭里的植物部位</h2>
+        </div>
+        <span class="text-xs font-bold text-botanical-700 bg-botanical-100 px-3 py-1 rounded-full border border-botanical-700/30">
+          手指拖拽或点击归位
+        </span>
+      </div>
+
+      <p class="text-xs sm:text-sm text-bark-800 font-medium mb-6">
+        今天的早餐桌上有 6 样美味食物！请将食物拖拽（或点击选择）到正确的**植物器官篮子**里：
+      </p>
+
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        <!-- Draggable Breakfast Food Tray -->
+        <div class="lg:col-span-4 paper-card-sm p-5 bg-paper-100 border-2 border-bark-800 space-y-3">
+          <h3 class="text-xs font-bold text-autumn-500 uppercase tracking-wider">早餐配餐盘（点击或拖动）</h3>
+          
+          <div id="breakfast-food-container" class="grid grid-cols-2 lg:grid-cols-1 gap-2.5">
+            <div draggable="true" data-organ="seed" data-title="馒头 (小麦种子)" class="drag-food-item paper-card-sm p-2.5 text-xs font-bold text-botanical-900 flex items-center justify-between hover:border-autumn-500 transition">
+              <span>🍞 馒头 (小麦)</span>
+              <span class="text-[10px] bg-autumn-400/20 text-autumn-600 px-1.5 py-0.5 rounded">种子</span>
+            </div>
+
+            <div draggable="true" data-organ="seed" data-title="豆浆 (大豆种子)" class="drag-food-item paper-card-sm p-2.5 text-xs font-bold text-botanical-900 flex items-center justify-between hover:border-autumn-500 transition">
+              <span>🥛 豆浆 (黄豆)</span>
+              <span class="text-[10px] bg-autumn-400/20 text-autumn-600 px-1.5 py-0.5 rounded">种子</span>
+            </div>
+
+            <div draggable="true" data-organ="leaf" data-title="炒青菜 (叶片)" class="drag-food-item paper-card-sm p-2.5 text-xs font-bold text-botanical-900 flex items-center justify-between hover:border-autumn-500 transition">
+              <span>🥬 炒青菜</span>
+              <span class="text-[10px] bg-autumn-400/20 text-autumn-600 px-1.5 py-0.5 rounded">叶</span>
+            </div>
+
+            <div draggable="true" data-organ="stem" data-title="薯条 (土豆茎)" class="drag-food-item paper-card-sm p-2.5 text-xs font-bold text-botanical-900 flex items-center justify-between hover:border-autumn-500 transition">
+              <span>🥔 薯条 (土豆)</span>
+              <span class="text-[10px] bg-autumn-400/20 text-autumn-600 px-1.5 py-0.5 rounded">茎</span>
+            </div>
+
+            <div draggable="true" data-organ="root" data-title="烤红薯 (块根)" class="drag-food-item paper-card-sm p-2.5 text-xs font-bold text-botanical-900 flex items-center justify-between hover:border-autumn-500 transition">
+              <span>🍠 烤红薯</span>
+              <span class="text-[10px] bg-autumn-400/20 text-autumn-600 px-1.5 py-0.5 rounded">根</span>
+            </div>
+
+            <div draggable="true" data-organ="seed" data-title="水煮花生 (种子)" class="drag-food-item paper-card-sm p-2.5 text-xs font-bold text-botanical-900 flex items-center justify-between hover:border-autumn-500 transition">
+              <span>🥜 水煮花生</span>
+              <span class="text-[10px] bg-autumn-400/20 text-autumn-600 px-1.5 py-0.5 rounded">种子</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Drop Targets: Plant Organ Baskets -->
+        <div class="lg:col-span-8 grid grid-cols-2 gap-4">
+          
+          <!-- Organ Basket: Root -->
+          <div data-target-organ="root" class="organ-drop-basket paper-card-sm p-4 bg-paper-50 border-2 border-dashed border-bark-800 min-h-[160px] flex flex-col justify-between transition">
+            <div class="flex items-center justify-between border-b border-bark-800/10 pb-2">
+              <span class="font-serif font-black text-sm text-botanical-900">🪴 根 (Root)</span>
+              <span class="text-[10px] text-bark-800/60 font-bold">吸收与固定</span>
+            </div>
+            <div class="basket-items-list space-y-1.5 my-2"></div>
+            <span class="text-[10px] text-center text-bark-800/40 font-bold block">拖入此处</span>
+          </div>
+
+          <!-- Organ Basket: Stem -->
+          <div data-target-organ="stem" class="organ-drop-basket paper-card-sm p-4 bg-paper-50 border-2 border-dashed border-bark-800 min-h-[160px] flex flex-col justify-between transition">
+            <div class="flex items-center justify-between border-b border-bark-800/10 pb-2">
+              <span class="font-serif font-black text-sm text-botanical-900">🎋 茎 (Stem)</span>
+              <span class="text-[10px] text-bark-800/60 font-bold">支撑与输送</span>
+            </div>
+            <div class="basket-items-list space-y-1.5 my-2"></div>
+            <span class="text-[10px] text-center text-bark-800/40 font-bold block">拖入此处</span>
+          </div>
+
+          <!-- Organ Basket: Leaf -->
+          <div data-target-organ="leaf" class="organ-drop-basket paper-card-sm p-4 bg-paper-50 border-2 border-dashed border-bark-800 min-h-[160px] flex flex-col justify-between transition">
+            <div class="flex items-center justify-between border-b border-bark-800/10 pb-2">
+              <span class="font-serif font-black text-sm text-botanical-900">🍃 叶 (Leaf)</span>
+              <span class="text-[10px] text-bark-800/60 font-bold">制造养料</span>
+            </div>
+            <div class="basket-items-list space-y-1.5 my-2"></div>
+            <span class="text-[10px] text-center text-bark-800/40 font-bold block">拖入此处</span>
+          </div>
+
+          <!-- Organ Basket: Seed -->
+          <div data-target-organ="seed" class="organ-drop-basket paper-card-sm p-4 bg-paper-50 border-2 border-dashed border-bark-800 min-h-[160px] flex flex-col justify-between transition">
+            <div class="flex items-center justify-between border-b border-bark-800/10 pb-2">
+              <span class="font-serif font-black text-sm text-botanical-900">🌰 种子 (Seed)</span>
+              <span class="text-[10px] text-bark-800/60 font-bold">繁衍与储备</span>
+            </div>
+            <div class="basket-items-list space-y-1.5 my-2"></div>
+            <span class="text-[10px] text-center text-bark-800/40 font-bold block">拖入此处</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Success Feedback Alert Banner -->
+      <div id="case2-clear-alert" class="mt-6 p-4 rounded-xl bg-botanical-100 border-2 border-botanical-700 text-botanical-900 font-bold text-center text-sm hidden animate-bounce">
+        🎉 成功破案！原来我们每天吃的早饭，绝大多数都直接来自于植物的不同身体器官！
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE 03: SEED TRAVEL PHYSICS LAB -->
+  <section id="case-3" class="max-w-5xl mx-auto px-6 scroll-mt-24">
+    <div class="paper-card p-6 sm:p-10 relative">
+      
+      <!-- Case Header -->
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b-2 border-bark-800/20 mb-6">
+        <div class="flex items-center gap-3">
+          <span class="tag-stamp font-cute">CASE #03</span>
+          <h2 class="font-cute font-black text-2xl sm:text-4xl text-botanical-900">案件三：谁在偷偷搭便车？</h2>
+        </div>
+        <span class="text-xs font-bold text-autumn-600 bg-autumn-400/10 px-3 py-1 rounded-full border border-autumn-400/30">
+          点击或拖动体验 3 大传播物理实验
+        </span>
+      </div>
+
+      <p class="text-xs sm:text-sm text-bark-800 font-medium mb-6">
+        植物没有脚，怎么把种子送到远方？请亲自操控下方 3 个实验装置，破解种子的无声旅行法：
+      </p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        
+        <!-- Seed 1: Cocklebur Velcro Hook -->
+        <div class="paper-card-sm p-5 bg-paper-50 flex flex-col justify-between border-2 border-bark-800">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-serif font-black text-lg text-botanical-900">苍耳 · 倒钩绒毛刺</h3>
+              <span class="text-[10px] bg-autumn-500/20 text-autumn-600 font-bold px-2 py-0.5 rounded-full">动物传播</span>
+            </div>
+
+            <!-- 🎨 带画框卡片：苍耳挂在狗尾巴插画 -->
+            <div class="relative w-full h-24 mb-3 rounded-lg overflow-hidden border border-dashed border-bark-800 bg-paper-200">
+              <img src="https://placehold.co/300x150/e36414/ffffff?text=Cocklebur+Dog+Tail" alt="苍耳挂狗尾巴" class="w-full h-full object-cover">
+              <span class="absolute bottom-1 left-1 bg-botanical-900 text-paper-50 text-[8px] font-bold px-1.5 py-0.5 rounded">🖼️ AI插画：苍耳挂在小狗尾巴上</span>
+            </div>
+
+            <p class="text-xs text-bark-800/80 leading-relaxed mb-3 font-medium">
+              果实外壳长满微小弯钩，遇到小狗或裤腿就能牢牢挂住！
+            </p>
+
+            <!-- Mini Interactive Stage 1 -->
+            <div id="cocklebur-stage" class="w-full h-32 bg-paper-200 border-2 border-bark-800 rounded-xl relative overflow-hidden flex items-center justify-center my-3 select-none">
+              <div id="cocklebur-dog" class="absolute left-2 bottom-3 text-4xl transition-all duration-1000 ease-in-out">
+                🐕
+              </div>
+              <div id="cocklebur-seed" class="absolute right-4 top-4 text-3xl cursor-pointer hover:scale-125 transition-transform">
+                🫐
+              </div>
+              <div id="cocklebur-status" class="absolute top-2 left-2 text-[10px] font-bold bg-paper-50/90 border border-bark-800 px-2 py-0.5 rounded shadow">
+                点击苍耳挂在小狗身上
+              </div>
+            </div>
+          </div>
+
+          <button id="btn-trigger-cocklebur" class="w-full py-2 rounded-lg bg-autumn-500 text-paper-50 text-xs font-bold hover:bg-autumn-600 transition shadow-[2px_2px_0px_#3d2612] flex items-center justify-center gap-1">
+            <span>🧷</span> 挂在小狗毛发上
+          </button>
+        </div>
+
+        <!-- Seed 2: Dandelion Wind Parachute -->
+        <div class="paper-card-sm p-5 bg-paper-50 flex flex-col justify-between border-2 border-bark-800">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-serif font-black text-lg text-botanical-900">蒲公英 · 降落伞冠毛</h3>
+              <span class="text-[10px] bg-botanical-500/20 text-botanical-700 font-bold px-2 py-0.5 rounded-full">风力传播</span>
+            </div>
+
+            <!-- 🎨 带画框卡片：蒲公英飞向高空插画 -->
+            <div class="relative w-full h-24 mb-3 rounded-lg overflow-hidden border border-dashed border-bark-800 bg-paper-200">
+              <img src="https://placehold.co/300x150/4e8760/ffffff?text=Dandelion+Parachute" alt="蒲公英降落伞" class="w-full h-full object-cover">
+              <span class="absolute bottom-1 left-1 bg-botanical-900 text-paper-50 text-[8px] font-bold px-1.5 py-0.5 rounded">🖼️ AI插画：蒲公英带小伞飞越山谷</span>
+            </div>
+
+            <p class="text-xs text-bark-800/80 leading-relaxed mb-3 font-medium">
+              种子带着绒毛小降落伞，秋风一吹就能飞到几公里外。
+            </p>
+
+            <!-- Mini Interactive Stage 2 -->
+            <div id="dandelion-stage" class="w-full h-32 bg-paper-200 border-2 border-bark-800 rounded-xl relative overflow-hidden flex items-center justify-center my-3 select-none">
+              <div id="dandelion-container" class="relative w-full h-full flex items-center justify-center">
+                <span class="text-5xl absolute bottom-2 left-6">🌱</span>
+                <div id="dandelion-seeds-group" class="absolute bottom-10 left-8 flex gap-1">
+                  <span class="dandelion-fluff text-lg inline-block transition-all duration-700">🪁</span>
+                  <span class="dandelion-fluff text-lg inline-block transition-all duration-700">🪁</span>
+                  <span class="dandelion-fluff text-lg inline-block transition-all duration-700">🪁</span>
+                </div>
+              </div>
+              <div id="dandelion-status" class="absolute top-2 left-2 text-[10px] font-bold bg-paper-50/90 border border-bark-800 px-2 py-0.5 rounded shadow">
+                滑动下方滑块控制风速
+              </div>
+            </div>
+
+            <!-- Wind Speed Control Slider -->
+            <div class="space-y-1 mb-2">
+              <div class="flex justify-between text-[10px] font-bold text-bark-800">
+                <span>🍃 无风</span>
+                <span id="wind-speed-label" class="text-botanical-700 font-extrabold">微风吹拂</span>
+                <span>🌬️ 强风</span>
+              </div>
+              <input type="range" id="wind-speed-slider" min="0" max="100" value="0" class="w-full h-2 bg-paper-200 rounded border border-bark-800 appearance-none cursor-pointer accent-botanical-700">
+            </div>
+          </div>
+
+          <button id="btn-trigger-dandelion" class="w-full py-2 rounded-lg bg-botanical-700 text-paper-50 text-xs font-bold hover:bg-botanical-800 transition shadow-[2px_2px_0px_#3d2612] flex items-center justify-center gap-1">
+            <span>🌬️</span> 一键呼唤秋风吹飞
+          </button>
+        </div>
+
+        <!-- Seed 3: Touch-me-not Explosive Pod -->
+        <div class="paper-card-sm p-5 bg-paper-50 flex flex-col justify-between border-2 border-bark-800">
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-serif font-black text-lg text-botanical-900">凤仙花 · 弹射自爆炮</h3>
+              <span class="text-[10px] bg-bark-600/20 text-bark-800 font-bold px-2 py-0.5 rounded-full">机械自弹</span>
+            </div>
+
+            <!-- 🎨 带画框卡片：果实自爆弹射插画 -->
+            <div class="relative w-full h-24 mb-3 rounded-lg overflow-hidden border border-dashed border-bark-800 bg-paper-200">
+              <img src="https://placehold.co/300x150/6f4520/ffffff?text=Balsam+Burst" alt="凤仙花果实爆裂" class="w-full h-full object-cover">
+              <span class="absolute bottom-1 left-1 bg-botanical-900 text-paper-50 text-[8px] font-bold px-1.5 py-0.5 rounded">🖼️ AI插画：果荚炸开弹射种子</span>
+            </div>
+
+            <p class="text-xs text-bark-800/80 leading-relaxed mb-3 font-medium">
+              成熟果皮积聚强大张力，轻触瞬间猛烈卷曲弹射种子！
+            </p>
+
+            <!-- Mini Interactive Stage 3 -->
+            <div id="balsam-stage" class="w-full h-32 bg-paper-200 border-2 border-bark-800 rounded-xl relative overflow-hidden flex flex-col items-center justify-center my-3 select-none">
+              <div id="balsam-pod" class="text-4xl cursor-pointer transition-transform duration-200 hover:scale-110 active:scale-125">
+                🫛
+              </div>
+              <div id="balsam-burst-particles" class="absolute inset-0 pointer-events-none hidden flex items-center justify-center">
+                <span class="absolute text-xl animate-ping">💥</span>
+                <span class="seed-p text-sm absolute -translate-x-12 -translate-y-8">🌰</span>
+                <span class="seed-p text-sm absolute translate-x-12 -translate-y-6">🌰</span>
+                <span class="seed-p text-sm absolute -translate-x-8 translate-y-8">🌰</span>
+                <span class="seed-p text-sm absolute translate-x-10 translate-y-6">🌰</span>
+              </div>
+              <div id="balsam-status" class="absolute top-2 left-2 text-[10px] font-bold bg-paper-50/90 border border-bark-800 px-2 py-0.5 rounded shadow">
+                点击果荚增加张力并弹射
+              </div>
+            </div>
+          </div>
+
+          <button id="btn-trigger-balsam" class="w-full py-2 rounded-lg bg-bark-600 text-paper-50 text-xs font-bold hover:bg-bark-800 transition shadow-[2px_2px_0px_#3d2612] flex items-center justify-center gap-1">
+            <span>💥</span> 点击触发果皮爆裂
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Case 3 Completion Alert -->
+      <div id="case3-clear-alert" class="mt-6 p-4 rounded-xl bg-botanical-100 border-2 border-botanical-700 text-botanical-900 font-bold text-center text-sm hidden animate-bounce">
+        🎉 太棒了！你已成功破解苍耳（毛发钩挂）、蒲公英（风力风筝）与凤仙花（果皮弹射）3 种传播绝活！
+      </div>
+
+      <!-- Safety Notice Card -->
+      <div class="mt-6 p-4 rounded-xl bg-autumn-400/15 border-2 border-autumn-500/40 flex items-center gap-3 text-xs sm:text-sm font-bold text-autumn-600">
+        <span class="text-2xl">⚠️</span>
+        <span>侦探安全守护提醒：野外或小区看到不认识的野生果实，未询问爸爸妈妈或老师前，<strong>绝对不能入口品尝</strong>！</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- AI MASCOT ASSISTANT "XIAO LV" -->
+  <section id="ai-mascot" class="max-w-5xl mx-auto px-6 scroll-mt-24">
+    <div class="paper-card p-6 sm:p-10 relative">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        
+        <!-- Mascot Avatar & Quick Presets -->
+        <div class="lg:col-span-5 flex flex-col items-center text-center">
+          
+          <!-- 🎨 装饰贴纸占位（无画框/透明PNG）：社长小绿全身全身大头图 -->
+          <div class="relative mb-3 group">
+            <div class="w-28 h-28 rounded-full bg-botanical-100 border-3 border-bark-800 flex items-center justify-center p-2 shadow-[4px_4px_0px_#3d2612] animate-float">
+              <img src="https://placehold.co/200x200/345e41/ffffff?text=Xiao+Lv+Mascot" alt="社长小绿AI贴纸" class="w-full h-full object-contain filter drop-shadow">
+            </div>
+            <span class="absolute bottom-0 right-0 px-2 py-0.5 bg-botanical-700 text-paper-50 text-[9px] font-bold rounded-full border border-bark-800 shadow">
+              🎨 社长小绿形象贴纸
+            </span>
+          </div>
+
+          <h3 class="font-serif font-black text-2xl text-botanical-900">社长 · 小绿</h3>
+          <p class="text-xs text-bark-800/80 font-medium mt-1 max-w-xs">
+            三年级植物百科答疑组！有任何不懂的植物好奇心，都可以问我。
+          </p>
+
+          <!-- Quick Preset Question Chips -->
+          <div class="w-full mt-5 space-y-2 text-left">
+            <span class="text-[10px] font-bold text-autumn-500 uppercase tracking-widest block">快捷提问点选：</span>
+            <button class="bot-preset-btn w-full text-left p-2.5 rounded-xl bg-paper-100 hover:bg-paper-200 border-1.5 border-bark-800 text-xs font-bold text-botanical-900 transition flex items-center gap-2">
+              <span>❓</span> 为什么向日葵会跟着太阳转？
+            </button>
+            <button class="bot-preset-btn w-full text-left p-2.5 rounded-xl bg-paper-100 hover:bg-paper-200 border-1.5 border-bark-800 text-xs font-bold text-botanical-900 transition flex items-center gap-2">
+              <span>❓</span> 植物晚上也要睡觉吗？
+            </button>
+            <button class="bot-preset-btn w-full text-left p-2.5 rounded-xl bg-paper-100 hover:bg-paper-200 border-1.5 border-bark-800 text-xs font-bold text-botanical-900 transition flex items-center gap-2">
+              <span>❓</span> 捕蝇草是怎么夹住虫子的？
+            </button>
+          </div>
+        </div>
+
+        <!-- Dialogue History & Input -->
+        <div class="lg:col-span-7 bg-paper-100 border-2 border-bark-800 rounded-2xl p-4 sm:p-5 flex flex-col h-[400px] relative">
+          <!-- AI 未授权遮罩：默认显示，PIN 认证通过后隐藏 -->
+          <div id="ai-lock-overlay" class="absolute inset-0 z-30 bg-paper-100/95 rounded-2xl flex flex-col items-center justify-center text-center px-6 gap-3">
+            <div class="text-4xl">🔒</div>
+            <p class="font-cute font-bold text-botanical-900 text-lg">小绿 AI 未激活</p>
+            <p class="text-xs text-bark-800/80 font-medium leading-relaxed max-w-xs">回到页面顶部「侦探报到登记」处输入<span class="font-bold text-autumn-600">小绿认证编号</span>，点「激活小绿」即可解锁实时问答。未输入也不影响其他探案环节哦～</p>
+          </div>
+
+          <div id="chat-dialogue-window" class="flex-1 overflow-y-auto space-y-3 pr-2">
+            <!-- Initial Mascot Greeting -->
+            <div class="flex items-start gap-2.5">
+              <div class="w-8 h-8 rounded-full bg-botanical-700 text-paper-50 flex items-center justify-center text-sm font-bold shrink-0 border border-bark-800">🌱</div>
+              <div class="bg-paper-50 border-2 border-bark-800 p-3 rounded-2xl rounded-tl-none text-xs sm:text-sm text-botanical-900 font-medium max-w-[85%] leading-relaxed shadow-[2px_2px_0px_#3d2612]">
+                小侦探你好！我是社长小绿。今天关于植物有什么好奇的？点左边的问题，或者输入框问我吧！
+              </div>
+            </div>
+          </div>
+
+          <!-- Chat Input Form -->
+          <form id="chat-input-form" class="mt-3 pt-3 border-t-2 border-bark-800/10 flex gap-2">
+            <input type="text" id="user-question-input" placeholder="输入你想问小绿的植物问题..." class="flex-1 px-4 py-2.5 rounded-xl bg-paper-50 border-2 border-bark-800 text-xs sm:text-sm font-bold text-botanical-900 focus:outline-none focus:ring-2 focus:ring-autumn-500">
+            <button type="submit" class="px-4 py-2.5 rounded-xl bg-autumn-500 hover:bg-autumn-600 text-paper-50 font-bold text-xs sm:text-sm shadow-[2px_2px_0px_#3d2612] transition shrink-0">
+              发送 🚀
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- CERTIFICATE & HOMEWORK TASK SECTION -->
+  <section id="certificate-section" class="max-w-4xl mx-auto px-6 scroll-mt-24">
+    <div class="paper-card p-8 sm:p-12 text-center relative bg-gradient-to-b from-paper-50 to-paper-100 border-4 border-bark-800 shadow-[8px_8px_0px_#3d2612]">
+      
+      <!-- Stamp Visual Badge -->
+      <div class="absolute right-6 top-6 w-24 h-24 rounded-full border-4 border-autumn-500/30 flex items-center justify-center text-autumn-600 font-cute font-black text-xs rotate-12 pointer-events-none uppercase">
+        Botanist<br>Passed
+      </div>
+
+      <!-- 🎨 装饰贴纸占位（无画框/透明PNG）：左侧猫头鹰校长奖章贴纸 -->
+      <div class="absolute left-6 top-6 w-20 h-20 pointer-events-none hidden sm:block -rotate-12">
+        <img src="https://placehold.co/150x150/fb8b24/ffffff?text=Medal+Owl" alt="奖章贴纸" class="w-full h-full object-contain filter drop-shadow">
+        <span class="absolute -bottom-2 left-0 bg-autumn-500 text-paper-50 text-[8px] font-bold px-1 rounded">🎨 奖章贴纸</span>
+      </div>
+
+      <div class="inline-block text-5xl mb-2">🏅</div>
+      <h2 class="font-cute font-black text-3xl sm:text-5xl text-botanical-900 mb-2">植物小侦探破案证书</h2>
+      <p class="text-xs uppercase font-bold text-autumn-600 tracking-widest mb-6">Junior Botanical Detective Certificate</p>
+
+      <div class="max-w-md mx-auto bg-paper-50 border-2 border-bark-800 rounded-2xl p-6 shadow-inner mb-6 space-y-2">
+        <p class="text-sm font-bold text-bark-800">
+          兹证明侦探： <span id="certificate-student-name" class="text-autumn-600 underline text-lg font-black px-1">名侦探小明</span>
+        </p>
+        <p class="text-xs text-bark-800/80 leading-relaxed font-medium">
+          在本次《秋天植物侦探社》45分钟探秘课程中，成功破解叶子变黄、早餐器官归类及种子传播三项案情，特发此证！
+        </p>
+      </div>
+
+      <!-- Parent-Child Homework Checklist -->
+      <div class="paper-card-sm p-5 bg-botanical-900 text-paper-50 text-left max-w-lg mx-auto mb-6 space-y-2 border-2 border-bark-800">
+        <h4 class="font-bold text-autumn-400 text-sm flex items-center gap-2">
+          <span>🏡</span> 本周亲子探秘小任务：
+        </h4>
+        <ul class="text-xs space-y-1.5 pl-5 list-disc font-medium text-paper-100/90 leading-relaxed">
+          <li>本周和爸爸妈妈在小区或公园找 <strong>3 种不同的落叶或果实</strong>。</li>
+          <li>用手机拍照或贴在纸上，猜猜它是植物的哪个器官。</li>
+          <li>下节课带到班级分享展示！</li>
+        </ul>
+      </div>
+
+      <!-- Print Button -->
+      <button onclick="window.print()" class="px-6 py-2.5 rounded-xl bg-botanical-700 hover:bg-botanical-800 text-paper-50 font-bold text-xs sm:text-sm shadow-[3px_3px_0px_#3d2612] transition inline-flex items-center gap-2">
+        🖨️ 打印/保存此证书
+      </button>
+    </div>
+  </section>
+
+</main>
+
+<footer class="relative z-10 border-t-2 border-bark-800/20 py-8 text-center text-xs text-bark-800/60 font-bold">
+  《秋天植物侦探社》自然探秘交互手记 · Designed for Primary Science Education
+</footer>
+
+<script>
+/* --------------------------------------------------
+   1. Audio Synthesizer (Web Audio API)
+   -------------------------------------------------- */
+let audioCtx = null;
+let soundEnabled = true;
+
+function initAudio() {
+  if (!audioCtx) {
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    if (AudioContext) {
+      audioCtx = new AudioContext();
+    }
+  }
+  if (audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+}
+
+function playSynthesizedSound(type) {
+  if (!soundEnabled) return;
+  try {
+    initAudio();
+    if (!audioCtx) return;
+
+    const now = audioCtx.currentTime;
+    if (type === 'pop') {
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(350, now);
+      osc.frequency.exponentialRampToValueAtTime(700, now + 0.08);
+      gain.gain.setValueAtTime(0.25, now);
+      gain.gain.exponentialRampToValueAtTime(0.01, now + 0.08);
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.start(now);
+      osc.stop(now + 0.08);
+    } else if (type === 'success') {
+      const notes = [523.25, 659.25, 783.99, 1046.50]; // C5, E5, G5, C6
+      notes.forEach((freq, idx) => {
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = 'triangle';
+        o.frequency.setValueAtTime(freq, now + idx * 0.08);
+        g.gain.setValueAtTime(0.2, now + idx * 0.08);
+        g.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.25);
+        o.connect(g);
+        g.connect(audioCtx.destination);
+        o.start(now + idx * 0.08);
+        o.stop(now + idx * 0.08 + 0.25);
+      });
+    } else if (type === 'breeze') {
+      const bufferSize = audioCtx.sampleRate * 0.4;
+      const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      const filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(300, now);
+      filter.frequency.linearRampToValueAtTime(700, now + 0.2);
+      filter.frequency.linearRampToValueAtTime(200, now + 0.4);
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.12, now);
+      gain.gain.linearRampToValueAtTime(0.01, now + 0.4);
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(audioCtx.destination);
+      noise.start(now);
+    }
+  } catch (e) {
+    console.warn('Audio playback unavailable:', e);
+  }
+}
+
+// Sound toggle button setup
+const soundToggleBtn = document.getElementById('sound-toggle-btn');
+const soundStateIcon = document.getElementById('sound-state-icon');
+if (soundToggleBtn) {
+  soundToggleBtn.addEventListener('click', () => {
+    soundEnabled = !soundEnabled;
+    if (soundStateIcon) {
+      soundStateIcon.textContent = soundEnabled ? '🔊' : '🔇';
+    }
+    if (soundEnabled) playSynthesizedSound('pop');
+  });
+}
+
+/* --------------------------------------------------
+   2. Canvas Background & Visual Effects
+   -------------------------------------------------- */
+const canvas = document.getElementById('autumn-canvas');
+const ctx = canvas ? canvas.getContext('2d') : null;
+let particles = [];
+
+function resizeCanvas() {
+  if (!canvas) return;
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+resizeCanvas();
+
+class Particle {
+  constructor(x, y, type = 'leaf') {
+    this.x = x || Math.random() * (canvas ? canvas.width : 1000);
+    this.y = y || -20;
+    this.type = type;
+    this.size = Math.random() * 8 + 6;
+    this.speedX = Math.random() * 2 - 1;
+    this.speedY = Math.random() * 1.5 + 0.8;
+    this.rotation = Math.random() * 360;
+    this.rotSpeed = Math.random() * 2 - 1;
+    this.color = ['#fb8b24', '#e36414', '#9a031e', '#4e8760'][Math.floor(Math.random() * 4)];
+    this.opacity = 1;
+    this.life = 1;
+  }
+  update() {
+    this.x += this.speedX + Math.sin(this.y * 0.02) * 0.5;
+    this.y += this.speedY;
+    this.rotation += this.rotSpeed;
+    if (this.type === 'burst') {
+      this.life -= 0.02;
+      this.opacity = Math.max(0, this.life);
+    }
+  }
+  draw() {
+    if (!ctx) return;
+    ctx.save();
+    ctx.translate(this.x, this.y);
+    ctx.rotate((this.rotation * Math.PI) / 180);
+    ctx.globalAlpha = this.opacity;
+    ctx.fillStyle = this.color;
+    ctx.beginPath();
+    if (this.type === 'burst') {
+      ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+    } else {
+      ctx.ellipse(0, 0, this.size, this.size / 2, 0, 0, Math.PI * 2);
+    }
+    ctx.fill();
+    ctx.restore();
+  }
+}
+
+function initParticles() {
+  if (!canvas) return;
+  for (let i = 0; i < 20; i++) {
+    const p = new Particle();
+    p.y = Math.random() * canvas.height;
+    particles.push(p);
+  }
+}
+initParticles();
+
+function animateCanvas() {
+  if (ctx && canvas) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = particles.length - 1; i >= 0; i--) {
+      const p = particles[i];
+      p.update();
+      p.draw();
+      if (p.y > canvas.height + 20 || p.opacity <= 0) {
+        particles.splice(i, 1);
+        if (particles.length < 20) {
+          particles.push(new Particle());
+        }
+      }
+    }
+  }
+  requestAnimationFrame(animateCanvas);
+}
+animateCanvas();
+
+function triggerSeedExplosion(x, y, kind) {
+  for (let i = 0; i < 18; i++) {
+    const p = new Particle(x, y, 'burst');
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 6 + 2;
+    p.speedX = Math.cos(angle) * speed;
+    p.speedY = Math.sin(angle) * speed;
+    p.color = kind === 'balsam' ? '#6f4520' : '#fb8b24';
+    particles.push(p);
+  }
+}
+
+/* --------------------------------------------------
+   3. Detective Entry & Cursor Setup
+   -------------------------------------------------- */
+const journalCur = document.getElementById('journal-cur');
+if (journalCur) {
+  document.addEventListener('mousemove', (e) => {
+    journalCur.style.left = e.clientX + 'px';
+    journalCur.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('button, a, input, [draggable="true"]').forEach((el) => {
+    el.addEventListener('mouseenter', () => journalCur.classList.add('cur-expanded'));
+    el.addEventListener('mouseleave', () => journalCur.classList.remove('cur-expanded'));
+  });
+}
+
+const nameField = document.getElementById('detective-name-field');
+const entryConfirmBtn = document.getElementById('entry-confirm-btn');
+const entrySuccessMsg = document.getElementById('entry-success-msg');
+const certName = document.getElementById('certificate-student-name');
+
+if (entryConfirmBtn && nameField) {
+  entryConfirmBtn.addEventListener('click', () => {
+    const val = nameField.value.trim() || '枫叶侦探小明';
+    if (certName) certName.textContent = val;
+    if (entrySuccessMsg) entrySuccessMsg.classList.remove('hidden');
+    playSynthesizedSound('success');
+  });
+}
+
+/* --------------------------------------------------
+   4. Case 1: Leaf Season Control & Stomata
+   -------------------------------------------------- */
+const seasonSlider = document.getElementById('season-control-slider');
+const seasonLabel = document.getElementById('season-label-indicator');
+const leafStop1 = document.getElementById('leaf-stop-1');
+const leafStop2 = document.getElementById('leaf-stop-2');
+const chef1 = document.getElementById('chef-1');
+const chef2 = document.getElementById('chef-2');
+const pigmentYellow = document.getElementById('pigment-yellow');
+const stomataBtn = document.getElementById('stomata-toggle-btn');
+const stomataDesc = document.getElementById('stomata-desc');
+
+if (seasonSlider) {
+  seasonSlider.addEventListener('input', (e) => {
+    const val = parseInt(e.target.value);
+    if (val < 33) {
+      if (seasonLabel) seasonLabel.textContent = '盛夏状态 (阳光厨房全开)';
+      if (leafStop1) leafStop1.setAttribute('stop-color', '#345e41');
+      if (leafStop2) leafStop2.setAttribute('stop-color', '#1b3022');
+      if (chef1) chef1.style.opacity = '1';
+      if (chef2) chef2.style.opacity = '1';
+      if (pigmentYellow) pigmentYellow.style.opacity = '0';
+    } else if (val < 66) {
+      if (seasonLabel) seasonLabel.textContent = '初秋过渡 (叶绿素准备退场)';
+      if (leafStop1) leafStop1.setAttribute('stop-color', '#e36414');
+      if (leafStop2) leafStop2.setAttribute('stop-color', '#4e8760');
+      if (chef1) chef1.style.opacity = '0.5';
+      if (chef2) chef2.style.opacity = '0.7';
+      if (pigmentYellow) pigmentYellow.style.opacity = '0.5';
+    } else {
+      if (seasonLabel) seasonLabel.textContent = '深秋金黄 (胡萝卜素全面亮相)';
+      if (leafStop1) leafStop1.setAttribute('stop-color', '#fb8b24');
+      if (leafStop2) leafStop2.setAttribute('stop-color', '#e36414');
+      if (chef1) chef1.style.opacity = '0';
+      if (chef2) chef2.style.opacity = '0.2';
+      if (pigmentYellow) pigmentYellow.style.opacity = '1';
+    }
+  });
+}
+
+if (stomataBtn && stomataDesc) {
+  stomataBtn.addEventListener('click', () => {
+    stomataDesc.classList.toggle('hidden');
+    playSynthesizedSound('breeze');
+  });
+}
+
+/* --------------------------------------------------
+   5. Case 2: Breakfast Botanical Organ Matching
+   -------------------------------------------------- */
+let matchedCount = 0;
+const totalItems = 6;
+const dragItems = document.querySelectorAll('.drag-food-item');
+const dropBaskets = document.querySelectorAll('.organ-drop-basket');
+let selectedFoodItem = null;
+
+dragItems.forEach((item) => {
+  item.addEventListener('dragstart', (e) => {
+    e.dataTransfer.setData('text/plain', JSON.stringify({
+      title: item.dataset.title,
+      organ: item.dataset.organ
+    }));
+    item.classList.add('opacity-50');
+  });
+
+  item.addEventListener('dragend', () => {
+    item.classList.remove('opacity-50');
+  });
+
+  // Mobile fallback (click item then click basket)
+  item.addEventListener('click', () => {
+    dragItems.forEach((i) => i.classList.remove('ring-4', 'ring-autumn-500'));
+    selectedFoodItem = item;
+    item.classList.add('ring-4', 'ring-autumn-500');
+    playSynthesizedSound('pop');
+  });
+});
+
+dropBaskets.forEach((basket) => {
+  basket.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    basket.classList.add('bg-botanical-100', 'border-botanical-700');
+  });
+
+  basket.addEventListener('dragleave', () => {
+    basket.classList.remove('bg-botanical-100', 'border-botanical-700');
+  });
+
+  const handlePlacement = (organ, title, foodEl) => {
+    const targetOrgan = basket.dataset.targetOrgan;
+    if (organ === targetOrgan) {
+      basket.classList.remove('bg-botanical-100', 'border-botanical-700');
+      const list = basket.querySelector('.basket-items-list');
+      const tag = document.createElement('div');
+      tag.className = 'text-xs font-bold bg-botanical-700 text-paper-50 px-2.5 py-1 rounded-lg flex items-center justify-between shadow';
+      tag.textContent = '✅ ' + title;
+      list.appendChild(tag);
+
+      if (foodEl) foodEl.remove();
+      matchedCount++;
+      playSynthesizedSound('pop');
+
+      if (matchedCount === totalItems) {
+        const alertBox = document.getElementById('case2-clear-alert');
+        if (alertBox) alertBox.classList.remove('hidden');
+        playSynthesizedSound('success');
+      }
+    } else {
+      basket.classList.add('bg-autumn-400/30');
+      setTimeout(() => basket.classList.remove('bg-autumn-400/30'), 500);
+    }
+  };
+
+  basket.addEventListener('drop', (e) => {
+    e.preventDefault();
+    try {
+      const data = JSON.parse(e.dataTransfer.getData('text/plain'));
+      const foodEl = Array.from(dragItems).find((i) => i.dataset.title === data.title);
+      handlePlacement(data.organ, data.title, foodEl);
+    } catch (err) {
+      console.error(err);
+    }
+  });
+
+  basket.addEventListener('click', () => {
+    if (selectedFoodItem) {
+      handlePlacement(selectedFoodItem.dataset.organ, selectedFoodItem.dataset.title, selectedFoodItem);
+      selectedFoodItem = null;
+    }
+  });
+});
+
+/* --------------------------------------------------
+   6. Case 3: Seed Travel Interactive Lab
+   -------------------------------------------------- */
+let case3Tested = { cocklebur: false, dandelion: false, balsam: false };
+
+function checkCase3Completion() {
+  if (case3Tested.cocklebur && case3Tested.dandelion && case3Tested.balsam) {
+    const alertBox = document.getElementById('case3-clear-alert');
+    if (alertBox) alertBox.classList.remove('hidden');
+    playSynthesizedSound('success');
+  }
+}
+
+// 1. Cocklebur Hook Animation
+const dogEl = document.getElementById('cocklebur-dog');
+const cockleburSeed = document.getElementById('cocklebur-seed');
+const cockleburStatus = document.getElementById('cocklebur-status');
+const btnCocklebur = document.getElementById('btn-trigger-cocklebur');
+
+function runCockleburHook() {
+  if (!dogEl || !cockleburSeed) return;
+  
+  playSynthesizedSound('pop');
+  cockleburSeed.style.transition = 'all 0.5s ease-in-out';
+  cockleburSeed.style.transform = 'translate(-110px, 45px) scale(0.9)';
+  
+  setTimeout(() => {
+    cockleburStatus.textContent = '✅ 钩子固定在小狗毛发上！小狗跑远了~';
+    cockleburStatus.className = 'absolute top-2 left-2 text-[10px] font-bold bg-autumn-500 text-paper-50 border border-bark-800 px-2 py-0.5 rounded shadow';
+    
+    dogEl.style.transform = 'translateX(180px)';
+    cockleburSeed.style.transform = 'translate(70px, 45px) scale(0.8)';
+    
+    case3Tested.cocklebur = true;
+    checkCase3Completion();
+
+    setTimeout(() => {
+      dogEl.style.transform = 'translateX(0px)';
+      cockleburSeed.style.transform = 'translate(0px, 0px) scale(1)';
+      cockleburStatus.textContent = '点击苍耳挂在小狗身上';
+      cockleburStatus.className = 'absolute top-2 left-2 text-[10px] font-bold bg-paper-50/90 border border-bark-800 px-2 py-0.5 rounded shadow';
+    }, 3200);
+  }, 500);
+}
+
+if (cockleburSeed) cockleburSeed.addEventListener('click', runCockleburHook);
+if (btnCocklebur) btnCocklebur.addEventListener('click', runCockleburHook);
+
+// 2. Dandelion Wind Animation
+const windSlider = document.getElementById('wind-speed-slider');
+const windLabel = document.getElementById('wind-speed-label');
+const dandelionFluffs = document.querySelectorAll('.dandelion-fluff');
+const dandelionStatus = document.getElementById('dandelion-status');
+const btnDandelion = document.getElementById('btn-trigger-dandelion');
+
+function applyWindEffect(val) {
+  if (val > 20) {
+    playSynthesizedSound('pop');
+    dandelionFluffs.forEach((fluff, idx) => {
+      const offsetX = (val * 1.8) + (idx * 20);
+      const offsetY = -(val * 0.7) - (idx * 15);
+      const rot = val * 3 + (idx * 20);
+      fluff.style.transform = `translate(${offsetX}px, ${offsetY}px) rotate(${rot}deg) scale(0.85)`;
+      fluff.style.opacity = Math.max(0.2, 1 - val/120).toString();
+    });
+
+    if (val > 60) {
+      dandelionStatus.textContent = '🍃 强风把蒲公英伞吹到了百米高空！';
+      dandelionStatus.className = 'absolute top-2 left-2 text-[10px] font-bold bg-botanical-700 text-paper-50 border border-bark-800 px-2 py-0.5 rounded shadow';
+      windLabel.textContent = '🌬️ 狂风大作';
+      case3Tested.dandelion = true;
+      checkCase3Completion();
+    } else {
+      dandelionStatus.textContent = '💨 微风摇曳，种子准备起飞';
+      windLabel.textContent = '🍃 微风吹拂';
+    }
+  } else {
+    dandelionFluffs.forEach((fluff) => {
+      fluff.style.transform = 'none';
+      fluff.style.opacity = '1';
+    });
+    dandelionStatus.textContent = '滑动下方滑块控制风速';
+    dandelionStatus.className = 'absolute top-2 left-2 text-[10px] font-bold bg-paper-50/90 border border-bark-800 px-2 py-0.5 rounded shadow';
+    windLabel.textContent = '🍃 无风静止';
+  }
+}
+
+if (windSlider) {
+  windSlider.addEventListener('input', (e) => {
+    applyWindEffect(parseInt(e.target.value));
+  });
+}
+
+if (btnDandelion) {
+  btnDandelion.addEventListener('click', () => {
+    if (windSlider) {
+      windSlider.value = "85";
+      applyWindEffect(85);
+    }
+  });
+}
+
+// 3. Balsam Explosive Pod
+const balsamPod = document.getElementById('balsam-pod');
+const balsamBurst = document.getElementById('balsam-burst-particles');
+const balsamStatus = document.getElementById('balsam-status');
+const btnBalsam = document.getElementById('btn-trigger-balsam');
+
+function explodeBalsamPod() {
+  playSynthesizedSound('success');
+  balsamPod.style.transform = 'scale(1.4) rotate(15deg)';
+  
+  setTimeout(() => {
+    balsamPod.textContent = '💥';
+    if (balsamBurst) balsamBurst.classList.remove('hidden');
+    balsamStatus.textContent = '💣 嘭！果皮卷曲弹射，种子飞出 3 米外！';
+    balsamStatus.className = 'absolute top-2 left-2 text-[10px] font-bold bg-bark-600 text-paper-50 border border-bark-800 px-2 py-0.5 rounded shadow';
+    
+    case3Tested.balsam = true;
+    checkCase3Completion();
+
+    const rect = balsamPod.getBoundingClientRect();
+    if (typeof triggerSeedExplosion === 'function') {
+      triggerSeedExplosion(rect.left + rect.width / 2, rect.top + rect.height / 2, 'balsam');
+    }
+
+    setTimeout(() => {
+      balsamPod.textContent = '🫛';
+      balsamPod.style.transform = 'none';
+      if (balsamBurst) balsamBurst.classList.add('hidden');
+      balsamStatus.textContent = '点击果荚增加张力并弹射';
+      balsamStatus.className = 'absolute top-2 left-2 text-[10px] font-bold bg-paper-50/90 border border-bark-800 px-2 py-0.5 rounded shadow';
+    }, 2800);
+  }, 200);
+}
+
+if (balsamPod) balsamPod.addEventListener('click', explodeBalsamPod);
+if (btnBalsam) btnBalsam.addEventListener('click', explodeBalsamPod);
+
+/* --------------------------------------------------
+   7. AI Mascot Assistant "Xiao Lv" — 真实 AI（经 /api/chat 反代）+ 本地降级
+   -------------------------------------------------- */
+const BOT_KNOWLEDGE_BASE = {
+  '向日葵': '小向日葵花盘下方的茎生长素怕光，背光侧长得快，就把花盘顶向太阳啦！但成熟开花后就不转了，一直朝东边。',
+  '睡觉': '是的！很多植物晚上会“睡觉”。比如合欢树和合掌草，晚上叶子会合拢，减少水分蒸发和热量散失。',
+  '捕蝇草': '捕蝇草的叶子像带刺的小夹子，上面有敏感的触发毛。只要虫子连续碰到两次触发毛，夹子就会在0.1秒内猛地关上！'
+};
+
+// 小绿授权状态：PIN 只在后端(/api/auth)比对，前端不出现 PIN 明文
+let aiAuthorized = false;
+const aiLockOverlay = document.getElementById('ai-lock-overlay');
+const aiAuthBtn = document.getElementById('ai-auth-btn');
+const aiPinField = document.getElementById('ai-pin-field');
+const aiAuthMsg = document.getElementById('ai-auth-msg');
+const chatInputForm = document.getElementById('chat-input-form');
+const userQuestionInput = document.getElementById('user-question-input');
+const chatDialogueWindow = document.getElementById('chat-dialogue-window');
+
+// 认证：调用后端 /api/auth 比对 PIN（PIN 仅在 CF 环境变量，前端不出现）
+let userPin = '';   // 仅缓存用户输入，用于后续聊天请求，非 PIN 明文比对
+async function tryAuthorizeAI() {
+  if (!aiAuthMsg) return;
+  const val = (aiPinField && aiPinField.value || '').trim();
+  if (!val) {
+    aiAuthMsg.textContent = 'ℹ️ 未输入编号，AI 对话暂不可用（其他环节照常玩）';
+    aiAuthMsg.className = 'text-[11px] font-bold pt-0.5 text-autumn-600';
+    aiAuthMsg.classList.remove('hidden');
+    return;
+  }
+  try {
+    const resp = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin: val })
+    });
+    const data = await resp.json();
+    if (data && data.authorized) {
+      aiAuthorized = true;
+      userPin = val;   // 缓存，供聊天请求携带；不用于前端比对
+      if (aiLockOverlay) aiLockOverlay.style.display = 'none';
+      if (aiAuthBtn) { aiAuthBtn.textContent = '已激活 ✓'; aiAuthBtn.disabled = true; aiAuthBtn.classList.add('opacity-60'); }
+      if (aiPinField) aiPinField.disabled = true;
+      aiAuthMsg.textContent = '🔓 小绿 AI 已激活，可以开始实时问答啦！';
+      aiAuthMsg.className = 'text-[11px] font-bold pt-0.5 text-botanical-700';
+      aiAuthMsg.classList.remove('hidden');
+    } else {
+      aiAuthorized = false;
+      userPin = '';
+      aiAuthMsg.textContent = '❌ 编号不对，AI 暂未解锁（其他环节照常玩）';
+      aiAuthMsg.className = 'text-[11px] font-bold pt-0.5 text-autumn-600';
+      aiAuthMsg.classList.remove('hidden');
+    }
+  } catch (err) {
+    aiAuthMsg.textContent = '⚠️ 认证服务连接失败（离线环境无法激活 AI，其他环节照常）';
+    aiAuthMsg.className = 'text-[11px] font-bold pt-0.5 text-autumn-600';
+    aiAuthMsg.classList.remove('hidden');
+  }
+}
+if (aiAuthBtn) aiAuthBtn.addEventListener('click', tryAuthorizeAI);
+if (aiPinField) aiPinField.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryAuthorizeAI(); });
+
+function appendChatMessage(role, text) {
+  if (!chatDialogueWindow) return;
+  const msgWrap = document.createElement('div');
+  msgWrap.className = `flex items-start gap-2.5 ${role === 'user' ? 'flex-row-reverse' : ''}`;
+
+  const avatar = document.createElement('div');
+  avatar.className = `w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold shrink-0 border border-bark-800 ${role === 'user' ? 'bg-autumn-500 text-paper-50' : 'bg-botanical-700 text-paper-50'}`;
+  avatar.textContent = role === 'user' ? '🕵️' : '🌱';
+
+  const textBubble = document.createElement('div');
+  textBubble.className = `p-3 rounded-2xl border-2 border-bark-800 text-xs sm:text-sm font-medium max-w-[85%] leading-relaxed shadow-[2px_2px_0px_#3d2612] ${role === 'user' ? 'bg-autumn-400/20 text-botanical-900 rounded-tr-none' : 'bg-paper-50 text-botanical-900 rounded-tl-none'}`;
+  textBubble.textContent = text;
+
+  msgWrap.appendChild(avatar);
+  msgWrap.appendChild(textBubble);
+  chatDialogueWindow.appendChild(msgWrap);
+  chatDialogueWindow.scrollTop = chatDialogueWindow.scrollHeight;
+}
+
+// 调用真实 AI（经 /api/chat 反代，pin 由后端校验）；失败降级本地知识库
+async function askAI(query) {
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: query, pin: userPin })
+    });
+    if (!resp.ok) throw new Error('bad status ' + resp.status);
+    const data = await resp.json();
+    if (data && data.reply) return data.reply;
+    throw new Error('no reply field');
+  } catch (err) {
+    console.warn('AI 调用失败，降级本地知识库：', err);
+    return null;
+  }
+}
+
+function localFallback(query) {
+  for (const key in BOT_KNOWLEDGE_BASE) {
+    if (query.includes(key)) return BOT_KNOWLEDGE_BASE[key];
+  }
+  return `关于“${query}”，小绿探长笔记记录：植物的世界充满适应生存环境的奇妙智慧！课后你可以和爸爸妈妈一起查查植物图鉴哦！`;
+}
+
+let botThinking = false;
+async function processQuestion(query) {
+  if (!query.trim() || botThinking) return;
+  appendChatMessage('user', query);
+  if (userQuestionInput) userQuestionInput.value = '';
+
+  // 思考中气泡
+  const thinking = document.createElement('div');
+  thinking.className = 'flex items-start gap-2.5';
+  thinking.innerHTML = '<div class="w-8 h-8 rounded-full bg-botanical-700 text-paper-50 flex items-center justify-center text-sm font-bold shrink-0 border border-bark-800">🌱</div><div class="bg-paper-50 border-2 border-bark-800 p-3 rounded-2xl rounded-tl-none text-xs text-botanical-900/60">小绿正在思考…</div>';
+  if (chatDialogueWindow) chatDialogueWindow.appendChild(thinking);
+
+  botThinking = true;
+  let answer;
+  if (aiAuthorized) {
+    answer = await askAI(query);
+  }
+  if (!answer) answer = localFallback(query);   // 未授权 或 AI 失败 → 本地兜底
+  if (thinking.parentNode) thinking.parentNode.removeChild(thinking);
+
+  appendChatMessage('bot', answer);
+  playSynthesizedSound('pop');
+  botThinking = false;
+}
+
+if (chatInputForm) {
+  chatInputForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    processQuestion(userQuestionInput ? userQuestionInput.value : '');
+  });
+}
+
+document.querySelectorAll('.bot-preset-btn').forEach((btn) => {
+  btn.addEventListener('click', () => {
+    const text = btn.textContent.replace('❓ ', '').trim();
+    processQuestion(text);
+  });
+});
+</script>
+</body>
+</html>

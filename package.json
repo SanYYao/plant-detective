@@ -1,0 +1,24 @@
+{
+  "name": "course-deck-engine",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "通用课件引擎 + 内容包（首个内容包：秋天植物侦探社）",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:offline": "vite build --mode offline",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.5.43"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^6.0.9",
+    "autoprefixer": "^10.6.1",
+    "postcss": "^8.5.29",
+    "tailwindcss": "^3.4.19",
+    "vite": "^8.3.3",
+    "vite-plugin-singlefile": "^2.3.3"
+  }
+}

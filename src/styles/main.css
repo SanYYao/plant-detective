@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── 糖圆体（猫啃网糖圆体，SIL OFL 1.1，商用可用；授权全文见 assets/fonts/OFL.txt）──
+   仅用于 .font-cute 点睛位，避免满屏圆体审美疲劳 */
+@font-face {
+  font-family: 'TangYuan';
+  /* 只引 woff2：现代浏览器全支持，离线单文件体积减半。
+     （仓库内保留 tangyuan.ttf 备用，但 css 不引用以免被打包） */
+  src: url('../assets/fonts/tangyuan.woff2') format('woff2');
+  font-weight: 400 900;
+  font-display: swap;
+}
+
+/* ── 幻灯片引擎：混合吸附滚动 ──
+   fit=screen 的段落自动吸附对齐一屏；fit=flow 的段落自由滚动 */
+.deck {
+  position: relative;
+  height: 100dvh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y proximity;
+  overscroll-behavior-y: contain;
+}
+
+.slide {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+
+/* 内容不足/超过一屏的段落：自由滚动，不参与吸附 */
+.slide--flow {
+  scroll-snap-align: none;
+  min-height: auto;
+  padding: 5rem 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deck { scroll-behavior: auto; }
+  .slide { scroll-snap-type: none; }
+}
+
+/* ── 手账纸质风格 ── */
+body {
+  background-color: #f7f4eb;
+  background-image: radial-gradient(#345e41 0.75px, transparent 0.75px), radial-gradient(#345e41 0.75px, #f7f4eb 0.75px);
+  background-size: 30px 30px;
+  background-position: 0 0, 15px 15px;
+}
+
+.paper-card {
+  background: #fcfbf7;
+  border: 2px solid #3d2612;
+  box-shadow: 6px 6px 0px #3d2612;
+  border-radius: 1.25rem;
+}
+
+.paper-card-sm {
+  background: #fcfbf7;
+  border: 1.5px solid #3d2612;
+  box-shadow: 3px 3px 0px #3d2612;
+  border-radius: 0.85rem;
+}
+
+.tag-stamp {
+  background-color: #e36414;
+  color: #fcfbf7;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.5rem;
+  box-shadow: 2px 2px 0px #3d2612;
+}
+
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #f7f4eb; }
+::-webkit-scrollbar-thumb { background: #345e41; border-radius: 5px; border: 2px solid #f7f4eb; }
+::-webkit-scrollbar-thumb:hover { background: #e36414; }
+
+.drag-food-item { cursor: grab; user-select: none; touch-action: none; }
+.drag-food-item:active { cursor: grabbing; transform: scale(1.05); }
+
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+}
+.animate-float { animation: floatSlow 4s ease-in-out infinite; }
+
+/* ── 打印：默认只打证书那一段 ── */
+@media print {
+  .deck { height: auto; overflow: visible; scroll-snap-type: none; }
+  .slide { min-height: auto; page-break-after: always; }
+  header, canvas, .no-print { display: none !important; }
+  body.print-cert-only .slide:not([data-slide='certificate']) { display: none !important; }
+  body.print-cert-only .slide[data-slide='certificate'] { page-break-after: auto; }
+}
