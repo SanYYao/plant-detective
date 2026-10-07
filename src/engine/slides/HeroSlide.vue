@@ -67,7 +67,7 @@ async function activate() {
       {{ data.subtitle }}
     </p>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-3xl mx-auto text-left items-stretch">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 w-full max-w-4xl mx-auto text-left items-stretch">
       <!-- 装备包插画卡 -->
       <div class="paper-card p-5 bg-paper-100 flex flex-col justify-between relative overflow-hidden">
         <div class="flex items-center justify-between mb-2">

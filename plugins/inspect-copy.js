@@ -31,6 +31,25 @@ const CLIENT_CODE = `
     return null
   }
 
+  // 元素指纹：同一文件里区分是哪块 DOM（组件级定位只能到文件）
+  function fingerprint(el) {
+    var n = el
+    while (n && n !== document.body) {
+      var txt = (n.textContent || '').replace(/\\s+/g, ' ').trim()
+      var key = (typeof n.className === 'string' ? n.className : '').split(/\\s+/)
+        .filter(function (c) { return /^(bg-|paper-card|tag-stamp)/.test(c) })
+        .slice(0, 2)
+      if (txt || key.length) {
+        var label = n.tagName.toLowerCase()
+        if (key.length) label += '.' + key.join('.')
+        if (txt) label += '「' + txt.slice(0, 18) + (txt.length > 18 ? '…' : '') + '」'
+        return label
+      }
+      n = n.parentElement
+    }
+    return ''
+  }
+
   function toast(msg, ok) {
     var d = document.createElement('div')
     d.textContent = msg
@@ -49,7 +68,7 @@ const CLIENT_CODE = `
     e.preventDefault()
     e.stopPropagation()
     e.stopImmediatePropagation()
-    fetch('/__inspect-copy?file=' + encodeURIComponent(file))
+    fetch('/__inspect-copy?file=' + encodeURIComponent(file) + '&el=' + encodeURIComponent(fingerprint(e.target)))
       .then(function (r) { return r.text() })
       .then(function (t) { toast('📋 已复制：' + t, true) })
       .catch(function () { toast('✗ 复制失败', false) })
@@ -125,12 +144,13 @@ export default function inspectCopy() {
         return `${rel}${at}（${parts.join('，')}）`
       }
 
-      const handle = async (rawParam, res) => {
+      const handle = async (rawParam, elFp, res) => {
         const m = String(rawParam).match(/^(.*?):(\d+):(\d+)$/)
         const rawFile = m ? m[1] : rawParam
         const line = m ? Number(m[2]) : 0
         const col = m ? Number(m[3]) : 0
-        const text = buildText(rawFile, line, col)
+        const base = buildText(rawFile, line, col)
+        const text = elFp ? `${base} · ${elFp}` : base
         const ok = await copyToClipboard(text)
         console.log(`\n[inspect-copy] ${ok ? '✓ 已复制到剪贴板' : '✗ 复制失败'} → ${text}\n`)
         res.statusCode = 200
@@ -147,8 +167,9 @@ export default function inspectCopy() {
         try {
           const url = new URL(req.url, 'http://localhost')
           const param = url.searchParams.get('file') || ''
+          const elFp = url.searchParams.get('el') || ''
           if (!param) { res.statusCode = 400; res.end('missing file'); return }
-          await handle(param, res)
+          await handle(param, elFp, res)
         } catch (err) {
           console.error('[inspect-copy] error:', err)
           res.statusCode = 500
