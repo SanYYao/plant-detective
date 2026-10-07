@@ -25,7 +25,17 @@
   }
 </script>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@500;700;900&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+  /* 可爱字体：猫啃网糖圆体（本地化，断网可用），仅用于 .font-cute 点睛，避免满屏圆体审美疲劳 */
+  @font-face {
+    font-family: 'TangYuan';
+    src: url('assets/fonts/tangyuan.woff2') format('woff2'),
+         url('assets/fonts/tangyuan.ttf') format('truetype');
+    font-weight: 400 900;
+    font-display: swap;
+  }
+  .font-cute {
+    font-family: 'TangYuan', 'PingFang SC', 'Microsoft YaHei', 'STSong', serif;
+  }
 
   /* Journal & tactile paper styling */
   body {
@@ -113,7 +123,7 @@
         🍂
       </div>
       <div>
-        <span class="font-serif font-black text-lg tracking-wide text-botanical-900 block leading-tight">植物侦探社</span>
+        <span class="font-cute font-black text-lg tracking-wide text-botanical-900 block leading-tight">植物侦探社</span>
         <span class="text-[10px] text-autumn-500 font-bold tracking-widest uppercase">3rd Grade Autumn Lesson</span>
       </div>
     </div>
@@ -174,7 +184,7 @@
       <span>🔍</span> 小学科学三级上册 · 45分钟观察与推理手记课件
     </div>
 
-    <h1 class="font-serif font-black text-5xl sm:text-7xl md:text-8xl text-botanical-900 tracking-tight mb-6 leading-none">
+    <h1 class="font-cute font-black text-5xl sm:text-7xl md:text-8xl text-botanical-900 tracking-tight mb-6 leading-none">
       秋天植物侦探社
     </h1>
 
@@ -188,7 +198,7 @@
       <!-- 🎨 带画框插画卡片：侦探装备包 -->
       <div class="paper-card p-5 bg-paper-100 border-2 border-bark-800 flex flex-col justify-between relative group overflow-hidden">
         <div class="flex items-center justify-between mb-2">
-          <span class="tag-stamp text-[10px]">EQUIPMENT</span>
+          <span class="tag-stamp text-[10px] font-cute">EQUIPMENT</span>
           <span class="text-[10px] font-bold text-autumn-600 bg-autumn-400/20 px-2 py-0.5 rounded">AI画框图画</span>
         </div>
         
@@ -208,8 +218,8 @@
         
         <div>
           <div class="flex items-center gap-2 mb-3">
-            <span class="tag-stamp text-xs">STEP 01</span>
-            <h3 class="font-serif font-bold text-lg text-botanical-900">侦探报到登记</h3>
+            <span class="tag-stamp text-xs font-cute">STEP 01</span>
+            <h3 class="font-cute font-bold text-lg text-botanical-900">侦探报到登记</h3>
           </div>
           <p class="text-xs text-bark-800/80 mb-4 font-medium">输入你的侦探名字，领取今日探案工具与手记：</p>
         </div>
@@ -221,6 +231,15 @@
               领证受命 🚀
             </button>
           </div>
+          <!-- 小绿认证编号（PIN）：认证通过才能用 AI 对话；错误不影响后续游玩 -->
+          <div class="flex gap-2 items-center">
+            <input type="password" id="ai-pin-field" inputmode="numeric" placeholder="小绿认证编号（选填）" class="flex-1 px-4 py-2.5 rounded-xl border-2 border-bark-800 bg-paper-50 text-botanical-900 font-bold focus:outline-none focus:ring-2 focus:ring-autumn-500 text-sm">
+            <button id="ai-auth-btn" type="button" class="px-4 py-2.5 rounded-xl bg-autumn-500 hover:bg-autumn-600 text-paper-50 font-bold text-xs shadow-[3px_3px_0px_#3d2612] transition shrink-0">
+              激活小绿 🔑
+            </button>
+          </div>
+          <div id="ai-auth-msg" class="text-[11px] font-bold hidden pt-0.5"></div>
+
           <div id="entry-success-msg" class="text-xs text-botanical-700 font-bold hidden flex items-center gap-1 pt-1">
             <span>✅</span> 登记成功！侦探案件卷宗已解锁，向下滑动开始破案。
           </div>
@@ -245,8 +264,8 @@
       <!-- Case Header -->
       <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b-2 border-bark-800/20 mb-8">
         <div class="flex items-center gap-3">
-          <span class="tag-stamp">CASE #01</span>
-          <h2 class="font-serif font-black text-2xl sm:text-4xl text-botanical-900">案件一：叶子为什么变黄了？</h2>
+          <span class="tag-stamp font-cute">CASE #01</span>
+          <h2 class="font-cute font-black text-2xl sm:text-4xl text-botanical-900">案件一：叶子为什么变黄了？</h2>
         </div>
         <div class="text-xs font-bold text-autumn-600 bg-autumn-400/10 px-3 py-1 rounded-full border border-autumn-400/30">
           ⏱ 建议破案时间：10 分钟
@@ -368,8 +387,8 @@
       <!-- Case Header -->
       <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b-2 border-bark-800/20 mb-6">
         <div class="flex items-center gap-3">
-          <span class="tag-stamp">CASE #02</span>
-          <h2 class="font-serif font-black text-2xl sm:text-4xl text-botanical-900">案件二：我早饭里的植物部位</h2>
+          <span class="tag-stamp font-cute">CASE #02</span>
+          <h2 class="font-cute font-black text-2xl sm:text-4xl text-botanical-900">案件二：我早饭里的植物部位</h2>
         </div>
         <span class="text-xs font-bold text-botanical-700 bg-botanical-100 px-3 py-1 rounded-full border border-botanical-700/30">
           手指拖拽或点击归位
@@ -479,8 +498,8 @@
       <!-- Case Header -->
       <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b-2 border-bark-800/20 mb-6">
         <div class="flex items-center gap-3">
-          <span class="tag-stamp">CASE #03</span>
-          <h2 class="font-serif font-black text-2xl sm:text-4xl text-botanical-900">案件三：谁在偷偷搭便车？</h2>
+          <span class="tag-stamp font-cute">CASE #03</span>
+          <h2 class="font-cute font-black text-2xl sm:text-4xl text-botanical-900">案件三：谁在偷偷搭便车？</h2>
         </div>
         <span class="text-xs font-bold text-autumn-600 bg-autumn-400/10 px-3 py-1 rounded-full border border-autumn-400/30">
           点击或拖动体验 3 大传播物理实验
@@ -675,8 +694,14 @@
         </div>
 
         <!-- Dialogue History & Input -->
-        <div class="lg:col-span-7 bg-paper-100 border-2 border-bark-800 rounded-2xl p-4 sm:p-5 flex flex-col h-[400px]">
-          
+        <div class="lg:col-span-7 bg-paper-100 border-2 border-bark-800 rounded-2xl p-4 sm:p-5 flex flex-col h-[400px] relative">
+          <!-- AI 未授权遮罩：默认显示，PIN 认证通过后隐藏 -->
+          <div id="ai-lock-overlay" class="absolute inset-0 z-30 bg-paper-100/95 rounded-2xl flex flex-col items-center justify-center text-center px-6 gap-3">
+            <div class="text-4xl">🔒</div>
+            <p class="font-cute font-bold text-botanical-900 text-lg">小绿 AI 未激活</p>
+            <p class="text-xs text-bark-800/80 font-medium leading-relaxed max-w-xs">回到页面顶部「侦探报到登记」处输入<span class="font-bold text-autumn-600">小绿认证编号</span>，点「激活小绿」即可解锁实时问答。未输入也不影响其他探案环节哦～</p>
+          </div>
+
           <div id="chat-dialogue-window" class="flex-1 overflow-y-auto space-y-3 pr-2">
             <!-- Initial Mascot Greeting -->
             <div class="flex items-start gap-2.5">
@@ -705,7 +730,7 @@
     <div class="paper-card p-8 sm:p-12 text-center relative bg-gradient-to-b from-paper-50 to-paper-100 border-4 border-bark-800 shadow-[8px_8px_0px_#3d2612]">
       
       <!-- Stamp Visual Badge -->
-      <div class="absolute right-6 top-6 w-24 h-24 rounded-full border-4 border-autumn-500/30 flex items-center justify-center text-autumn-600 font-serif font-black text-xs rotate-12 pointer-events-none uppercase">
+      <div class="absolute right-6 top-6 w-24 h-24 rounded-full border-4 border-autumn-500/30 flex items-center justify-center text-autumn-600 font-cute font-black text-xs rotate-12 pointer-events-none uppercase">
         Botanist<br>Passed
       </div>
 
@@ -716,7 +741,7 @@
       </div>
 
       <div class="inline-block text-5xl mb-2">🏅</div>
-      <h2 class="font-serif font-black text-3xl sm:text-5xl text-botanical-900 mb-2">植物小侦探破案证书</h2>
+      <h2 class="font-cute font-black text-3xl sm:text-5xl text-botanical-900 mb-2">植物小侦探破案证书</h2>
       <p class="text-xs uppercase font-bold text-autumn-600 tracking-widest mb-6">Junior Botanical Detective Certificate</p>
 
       <div class="max-w-md mx-auto bg-paper-50 border-2 border-bark-800 rounded-2xl p-6 shadow-inner mb-6 space-y-2">
@@ -1242,7 +1267,7 @@ if (balsamPod) balsamPod.addEventListener('click', explodeBalsamPod);
 if (btnBalsam) btnBalsam.addEventListener('click', explodeBalsamPod);
 
 /* --------------------------------------------------
-   7. AI Mascot Assistant "Xiao Lv" Logic
+   7. AI Mascot Assistant "Xiao Lv" — 真实 AI（经 /api/chat 反代）+ 本地降级
    -------------------------------------------------- */
 const BOT_KNOWLEDGE_BASE = {
   '向日葵': '小向日葵花盘下方的茎生长素怕光，背光侧长得快，就把花盘顶向太阳啦！但成熟开花后就不转了，一直朝东边。',
@@ -1250,11 +1275,41 @@ const BOT_KNOWLEDGE_BASE = {
   '捕蝇草': '捕蝇草的叶子像带刺的小夹子，上面有敏感的触发毛。只要虫子连续碰到两次触发毛，夹子就会在0.1秒内猛地关上！'
 };
 
-const chatDialogueWindow = document.getElementById('chat-dialogue-window');
+// 小绿授权状态：PIN 认证通过后才允许调用 AI
+let aiAuthorized = false;
+const AI_PIN = '022732';           // 给小姨的认证码（部署时可用环境变量覆盖，见 /api/chat）
+const aiLockOverlay = document.getElementById('ai-lock-overlay');
+const aiAuthBtn = document.getElementById('ai-auth-btn');
+const aiPinField = document.getElementById('ai-pin-field');
+const aiAuthMsg = document.getElementById('ai-auth-msg');
 const chatInputForm = document.getElementById('chat-input-form');
 const userQuestionInput = document.getElementById('user-question-input');
+const chatDialogueWindow = document.getElementById('chat-dialogue-window');
+
+// 认证：错误不影响后续游玩，只是不能解锁 AI 对话
+function tryAuthorizeAI() {
+  const val = (aiPinField && aiPinField.value || '').trim();
+  if (!aiAuthMsg) return;
+  if (val === AI_PIN) {
+    aiAuthorized = true;
+    if (aiLockOverlay) aiLockOverlay.style.display = 'none';
+    if (aiAuthBtn) { aiAuthBtn.textContent = '已激活 ✓'; aiAuthBtn.disabled = true; aiAuthBtn.classList.add('opacity-60'); }
+    if (aiPinField) aiPinField.disabled = true;
+    aiAuthMsg.textContent = '🔓 小绿 AI 已激活，可以开始实时问答啦！';
+    aiAuthMsg.className = 'text-[11px] font-bold pt-0.5 text-botanical-700';
+    if (aiAuthMsg) aiAuthMsg.classList.remove('hidden');
+  } else {
+    aiAuthorized = false;
+    aiAuthMsg.textContent = val ? '❌ 编号不对，AI 暂未解锁（其他环节照常玩）' : 'ℹ️ 未输入编号，AI 对话暂不可用';
+    aiAuthMsg.className = 'text-[11px] font-bold pt-0.5 text-autumn-600';
+    if (aiAuthMsg) aiAuthMsg.classList.remove('hidden');
+  }
+}
+if (aiAuthBtn) aiAuthBtn.addEventListener('click', tryAuthorizeAI);
+if (aiPinField) aiPinField.addEventListener('keydown', (e) => { if (e.key === 'Enter') tryAuthorizeAI(); });
 
 function appendChatMessage(role, text) {
+  if (!chatDialogueWindow) return;
   const msgWrap = document.createElement('div');
   msgWrap.className = `flex items-start gap-2.5 ${role === 'user' ? 'flex-row-reverse' : ''}`;
 
@@ -1272,33 +1327,60 @@ function appendChatMessage(role, text) {
   chatDialogueWindow.scrollTop = chatDialogueWindow.scrollHeight;
 }
 
-function processQuestion(query) {
-  if (!query.trim()) return;
-  appendChatMessage('user', query);
-  userQuestionInput.value = '';
+// 调用真实 AI（经 Pages Function /api/chat 反代）；失败降级本地知识库
+async function askAI(query) {
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: query })
+    });
+    if (!resp.ok) throw new Error('bad status ' + resp.status);
+    const data = await resp.json();
+    if (data && data.reply) return data.reply;
+    throw new Error('no reply field');
+  } catch (err) {
+    console.warn('AI 调用失败，降级本地知识库：', err);
+    return null;
+  }
+}
 
-  let answer = null;
+function localFallback(query) {
   for (const key in BOT_KNOWLEDGE_BASE) {
-    if (query.includes(key)) {
-      answer = BOT_KNOWLEDGE_BASE[key];
-      break;
-    }
+    if (query.includes(key)) return BOT_KNOWLEDGE_BASE[key];
   }
+  return `关于“${query}”，小绿探长笔记记录：植物的世界充满适应生存环境的奇妙智慧！课后你可以和爸爸妈妈一起查查植物图鉴哦！`;
+}
 
-  if (!answer) {
-    answer = `关于“${query}”，小绿探长笔记记录：植物的世界充满适应生存环境的奇妙智慧！课后你可以和爸爸妈妈一起查查植物图鉴哦！`;
+let botThinking = false;
+async function processQuestion(query) {
+  if (!query.trim() || botThinking) return;
+  appendChatMessage('user', query);
+  if (userQuestionInput) userQuestionInput.value = '';
+
+  // 思考中气泡
+  const thinking = document.createElement('div');
+  thinking.className = 'flex items-start gap-2.5';
+  thinking.innerHTML = '<div class="w-8 h-8 rounded-full bg-botanical-700 text-paper-50 flex items-center justify-center text-sm font-bold shrink-0 border border-bark-800">🌱</div><div class="bg-paper-50 border-2 border-bark-800 p-3 rounded-2xl rounded-tl-none text-xs text-botanical-900/60">小绿正在思考…</div>';
+  if (chatDialogueWindow) chatDialogueWindow.appendChild(thinking);
+
+  botThinking = true;
+  let answer;
+  if (aiAuthorized) {
+    answer = await askAI(query);
   }
+  if (!answer) answer = localFallback(query);   // 未授权 或 AI 失败 → 本地兜底
+  if (thinking.parentNode) thinking.parentNode.removeChild(thinking);
 
-  setTimeout(() => {
-    appendChatMessage('bot', answer);
-    playSynthesizedSound('pop');
-  }, 350);
+  appendChatMessage('bot', answer);
+  playSynthesizedSound('pop');
+  botThinking = false;
 }
 
 if (chatInputForm) {
   chatInputForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    processQuestion(userQuestionInput.value);
+    processQuestion(userQuestionInput ? userQuestionInput.value : '');
   });
 }
 
