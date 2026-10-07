@@ -1275,9 +1275,8 @@ const BOT_KNOWLEDGE_BASE = {
   '捕蝇草': '捕蝇草的叶子像带刺的小夹子，上面有敏感的触发毛。只要虫子连续碰到两次触发毛，夹子就会在0.1秒内猛地关上！'
 };
 
-// 小绿授权状态：PIN 认证通过后才允许调用 AI
+// 小绿授权状态：PIN 只在后端(/api/auth)比对，前端不出现 PIN 明文
 let aiAuthorized = false;
-const AI_PIN = '022732';           // 给小姨的认证码（部署时可用环境变量覆盖，见 /api/chat）
 const aiLockOverlay = document.getElementById('ai-lock-overlay');
 const aiAuthBtn = document.getElementById('ai-auth-btn');
 const aiPinField = document.getElementById('ai-pin-field');
@@ -1286,23 +1285,44 @@ const chatInputForm = document.getElementById('chat-input-form');
 const userQuestionInput = document.getElementById('user-question-input');
 const chatDialogueWindow = document.getElementById('chat-dialogue-window');
 
-// 认证：错误不影响后续游玩，只是不能解锁 AI 对话
-function tryAuthorizeAI() {
-  const val = (aiPinField && aiPinField.value || '').trim();
+// 认证：调用后端 /api/auth 比对 PIN（PIN 仅在 CF 环境变量，前端不出现）
+let userPin = '';   // 仅缓存用户输入，用于后续聊天请求，非 PIN 明文比对
+async function tryAuthorizeAI() {
   if (!aiAuthMsg) return;
-  if (val === AI_PIN) {
-    aiAuthorized = true;
-    if (aiLockOverlay) aiLockOverlay.style.display = 'none';
-    if (aiAuthBtn) { aiAuthBtn.textContent = '已激活 ✓'; aiAuthBtn.disabled = true; aiAuthBtn.classList.add('opacity-60'); }
-    if (aiPinField) aiPinField.disabled = true;
-    aiAuthMsg.textContent = '🔓 小绿 AI 已激活，可以开始实时问答啦！';
-    aiAuthMsg.className = 'text-[11px] font-bold pt-0.5 text-botanical-700';
-    if (aiAuthMsg) aiAuthMsg.classList.remove('hidden');
-  } else {
-    aiAuthorized = false;
-    aiAuthMsg.textContent = val ? '❌ 编号不对，AI 暂未解锁（其他环节照常玩）' : 'ℹ️ 未输入编号，AI 对话暂不可用';
+  const val = (aiPinField && aiPinField.value || '').trim();
+  if (!val) {
+    aiAuthMsg.textContent = 'ℹ️ 未输入编号，AI 对话暂不可用（其他环节照常玩）';
     aiAuthMsg.className = 'text-[11px] font-bold pt-0.5 text-autumn-600';
-    if (aiAuthMsg) aiAuthMsg.classList.remove('hidden');
+    aiAuthMsg.classList.remove('hidden');
+    return;
+  }
+  try {
+    const resp = await fetch('/api/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pin: val })
+    });
+    const data = await resp.json();
+    if (data && data.authorized) {
+      aiAuthorized = true;
+      userPin = val;   // 缓存，供聊天请求携带；不用于前端比对
+      if (aiLockOverlay) aiLockOverlay.style.display = 'none';
+      if (aiAuthBtn) { aiAuthBtn.textContent = '已激活 ✓'; aiAuthBtn.disabled = true; aiAuthBtn.classList.add('opacity-60'); }
+      if (aiPinField) aiPinField.disabled = true;
+      aiAuthMsg.textContent = '🔓 小绿 AI 已激活，可以开始实时问答啦！';
+      aiAuthMsg.className = 'text-[11px] font-bold pt-0.5 text-botanical-700';
+      aiAuthMsg.classList.remove('hidden');
+    } else {
+      aiAuthorized = false;
+      userPin = '';
+      aiAuthMsg.textContent = '❌ 编号不对，AI 暂未解锁（其他环节照常玩）';
+      aiAuthMsg.className = 'text-[11px] font-bold pt-0.5 text-autumn-600';
+      aiAuthMsg.classList.remove('hidden');
+    }
+  } catch (err) {
+    aiAuthMsg.textContent = '⚠️ 认证服务连接失败（离线环境无法激活 AI，其他环节照常）';
+    aiAuthMsg.className = 'text-[11px] font-bold pt-0.5 text-autumn-600';
+    aiAuthMsg.classList.remove('hidden');
   }
 }
 if (aiAuthBtn) aiAuthBtn.addEventListener('click', tryAuthorizeAI);
@@ -1327,13 +1347,13 @@ function appendChatMessage(role, text) {
   chatDialogueWindow.scrollTop = chatDialogueWindow.scrollHeight;
 }
 
-// 调用真实 AI（经 Pages Function /api/chat 反代）；失败降级本地知识库
+// 调用真实 AI（经 /api/chat 反代，pin 由后端校验）；失败降级本地知识库
 async function askAI(query) {
   try {
     const resp = await fetch('/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: query })
+      body: JSON.stringify({ message: query, pin: userPin })
     });
     if (!resp.ok) throw new Error('bad status ' + resp.status);
     const data = await resp.json();
