@@ -2,6 +2,7 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { viteSingleFile } from 'vite-plugin-singlefile'
 import VueDevTools from 'vite-plugin-vue-devtools'
+import inspectCopy from './plugins/inspect-copy.js'
 
 // 两种构建产物：
 //   npm run build          → 在线版（正常分片，部署 Cloudflare Pages，含 AI）
@@ -13,6 +14,7 @@ export default defineConfig(({ mode }) => {
     base: offline ? './' : '/',
     plugins: [
       vue(),
+      inspectCopy(),
       ...(offline ? [viteSingleFile()] : [VueDevTools({ launchEditor: 'nvim' })]),
     ],
     build: {
