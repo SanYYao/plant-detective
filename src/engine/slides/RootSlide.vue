@@ -114,7 +114,7 @@ onBeforeUnmount(() => {
       <!-- 水盆（Claude 纯 CSS 画稿） -->
       <div class="md:col-span-3 paper-card p-3 bg-paper-100">
         <div ref="wrapEl" class="cel-wrap">
-          <div class="cel-stage" :class="{ 'is-dyed': leafTinted }" :style="{ '--p': progress / 100, transform: `scale(${stageScale})` }">
+          <div class="cel-stage" :class="{ 'is-dyed': leafTinted }" :style="{ '--p': progress / 100, transform: `translate(-50%, -50%) scale(${stageScale})` }">
             <i class="lt"></i><i class="tb"></i><i class="cs"></i><i class="sh"></i>
             <i class="rm bk"></i><i class="sf"></i><i class="fs"></i>
 
@@ -227,18 +227,20 @@ onBeforeUnmount(() => {
   position: relative;
   width: 100%;
   aspect-ratio: 14 / 15;
-  max-height: 44vh;
+  /* 高度上限放宽：原来 44vh 把缩放比压小，画稿只占卡片左侧一小块 */
+  max-height: 60vh;
   margin: 0 auto;
   overflow: hidden;
 }
 .cel-stage {
   --lf: polygon(50% 100%, 41% 80%, 20% 84%, 27% 66%, 6% 58%, 23% 45%, 10% 29%, 33% 31%, 37% 9%, 50% 19%, 63% 9%, 67% 31%, 90% 29%, 77% 45%, 94% 58%, 73% 66%, 80% 84%, 59% 80%);
   position: absolute;
-  left: 0;
-  top: 0;
+  /* 跟着缩放一起居中：左对齐(0 0)会让画面贴在卡片左半边 */
+  left: 50%;
+  top: 50%;
   width: 560px;
   height: 600px;
-  transform-origin: 0 0;
+  transform-origin: 50% 50%;
   border-radius: 30px;
   overflow: hidden;
   background: linear-gradient(#f7eddc, #ecdcc0 78%);

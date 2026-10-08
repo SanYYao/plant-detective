@@ -1,11 +1,13 @@
 // 社长小绿：AI 问答
+import seniorGreen from '../../assets/lesson/senior-green.webp'
+
 export default {
   id: 'chat',
   type: 'chat',
   fit: 'screen',
   nav: '6. 问社长',
   data: {
-    avatarImg: null,
+    avatarImg: seniorGreen,
     avatarLabel: '🎨 社长小绿形象贴纸',
     name: '社长 · 小绿',
     desc: '三年级植物百科答疑组！有任何不懂的植物好奇心，都可以问我。',
