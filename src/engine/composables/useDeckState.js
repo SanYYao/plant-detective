@@ -5,8 +5,8 @@ const state = reactive({
   // 侦探信息
   detectiveName: '名侦探小明',
   registered: false,
-  // AI 授权
-  authorized: false,
+  // 小绿：本地植物百科，默认可直接对话（无需激活）
+  authorized: true,
   pin: '',
   // 音效
   soundOn: true,
