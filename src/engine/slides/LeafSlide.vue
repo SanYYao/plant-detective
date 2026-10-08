@@ -82,9 +82,8 @@ function toggleStomata() {
         <!-- 笔记与微实验 -->
         <div class="lg:col-span-5 space-y-4">
           <div class="paper-card-sm p-3 bg-paper-50">
-            <div class="relative w-full h-28 rounded-lg overflow-hidden border border-dashed border-bark-800 bg-paper-200 flex items-center justify-center">
+            <div class="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-bark-800 bg-paper-200 flex items-center justify-center">
               <img v-if="data.illustration.img" :src="data.illustration.img" class="w-full h-full object-cover" />
-              <p v-else class="text-[9px] text-bark-800/50 font-bold px-2 text-center leading-tight">{{ data.illustration.prompt }}</p>
               <div class="absolute top-1 left-1 bg-autumn-500 text-paper-50 text-[9px] font-bold px-1.5 py-0.5 rounded shadow">
                 {{ data.illustration.title }}
               </div>

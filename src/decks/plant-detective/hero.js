@@ -13,8 +13,6 @@ export default {
       label: 'EQUIPMENT',
       title: '植物侦探出勤装备包',
       img: heroEquipment,
-      note: '🖼️ 插画占位：植物侦探出勤装备包',
-      prompt: 'Cute watercolor illustration of detective tools, magnifying glass, leaf notebook, acorn badge, autumn colors, hand-drawn vector sticker, white background',
     },
     form: {
       step: 'STEP 01',

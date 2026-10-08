@@ -66,8 +66,8 @@ function locked() {
         <!-- 头像 + 预设 -->
         <div class="lg:col-span-5 flex flex-col items-center text-center">
           <div class="relative mb-3">
-            <div class="w-24 h-24 rounded-full bg-botanical-100 border-2 border-bark-800 flex items-center justify-center p-2 shadow-[4px_4px_0px_#3d2612] animate-float">
-              <img v-if="data.avatarImg" :src="data.avatarImg" class="w-full h-full object-contain" />
+            <div class="w-24 h-24 rounded-full overflow-hidden shrink-0 bg-botanical-100 border-2 border-bark-800 flex items-center justify-center shadow-[4px_4px_0px_#3d2612] animate-float">
+              <img v-if="data.avatarImg" :src="data.avatarImg" class="w-full h-full object-cover" />
               <span v-else class="text-4xl">🌱</span>
             </div>
           </div>

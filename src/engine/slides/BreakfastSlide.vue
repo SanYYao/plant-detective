@@ -121,8 +121,11 @@ function onDrop(e, organ) {
         </div>
       </div>
 
-      <div v-if="done" class="mt-5 p-3 rounded-xl bg-botanical-100 border-2 border-botanical-700 text-botanical-900 font-bold text-center text-sm animate-bounce">
-        {{ data.success }}
+      <div v-if="done" class="mt-5 flex items-center gap-4 p-3 rounded-xl bg-botanical-100 border-2 border-botanical-700 text-botanical-900 font-bold text-sm animate-bounce">
+        <div v-if="data.sticker && data.sticker.img" class="w-16 h-16 rounded-full overflow-hidden border-2 border-bark-800 shrink-0">
+          <img :src="data.sticker.img" class="w-full h-full object-cover" />
+        </div>
+        <p class="flex-1 text-left">{{ data.success }}</p>
       </div>
     </div>
   </div>

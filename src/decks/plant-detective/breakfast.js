@@ -28,6 +28,6 @@ export default {
     ],
     dropHint: '拖入此处',
     success: '🎉 成功破案！原来我们每天吃的早饭，绝大多数都直接来自于植物的不同身体器官！',
-    sticker: { img: foxPicnic, label: '🎨 无框贴纸：小狐狸在野餐' },
+    sticker: { img: foxPicnic },
   },
 }

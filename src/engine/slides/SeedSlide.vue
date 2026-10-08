@@ -86,9 +86,8 @@ function explode() {
               <h3 class="font-cute font-black text-base text-botanical-900">{{ exp.cocklebur.title }}</h3>
               <span class="text-[10px] bg-autumn-500/20 text-autumn-600 font-bold px-2 py-0.5 rounded-full">{{ exp.cocklebur.tag }}</span>
             </div>
-            <div class="relative w-full h-20 mb-2 rounded-lg overflow-hidden border border-dashed border-bark-800 bg-paper-200 flex items-center justify-center">
+            <div class="relative w-full aspect-video mb-2 rounded-lg overflow-hidden border-2 border-bark-800 bg-paper-200 flex items-center justify-center">
               <img v-if="exp.cocklebur.img" :src="exp.cocklebur.img" class="w-full h-full object-cover" />
-              <span v-else class="text-[9px] text-bark-800/50 font-bold">{{ exp.cocklebur.illustration }}</span>
             </div>
             <p class="text-xs text-bark-800/80 leading-relaxed mb-3 font-semibold">{{ exp.cocklebur.desc }}</p>
 
@@ -110,9 +109,8 @@ function explode() {
               <h3 class="font-cute font-black text-base text-botanical-900">{{ exp.dandelion.title }}</h3>
               <span class="text-[10px] bg-botanical-500/20 text-botanical-700 font-bold px-2 py-0.5 rounded-full">{{ exp.dandelion.tag }}</span>
             </div>
-            <div class="relative w-full h-20 mb-2 rounded-lg overflow-hidden border border-dashed border-bark-800 bg-paper-200 flex items-center justify-center">
+            <div class="relative w-full aspect-video mb-2 rounded-lg overflow-hidden border-2 border-bark-800 bg-paper-200 flex items-center justify-center">
               <img v-if="exp.dandelion.img" :src="exp.dandelion.img" class="w-full h-full object-cover" />
-              <span v-else class="text-[9px] text-bark-800/50 font-bold">{{ exp.dandelion.illustration }}</span>
             </div>
             <p class="text-xs text-bark-800/80 leading-relaxed mb-3 font-semibold">{{ exp.dandelion.desc }}</p>
 
@@ -146,9 +144,8 @@ function explode() {
               <h3 class="font-cute font-black text-base text-botanical-900">{{ exp.balsam.title }}</h3>
               <span class="text-[10px] bg-bark-600/20 text-bark-800 font-bold px-2 py-0.5 rounded-full">{{ exp.balsam.tag }}</span>
             </div>
-            <div class="relative w-full h-20 mb-2 rounded-lg overflow-hidden border border-dashed border-bark-800 bg-paper-200 flex items-center justify-center">
+            <div class="relative w-full aspect-video mb-2 rounded-lg overflow-hidden border-2 border-bark-800 bg-paper-200 flex items-center justify-center">
               <img v-if="exp.balsam.img" :src="exp.balsam.img" class="w-full h-full object-cover" />
-              <span v-else class="text-[9px] text-bark-800/50 font-bold">{{ exp.balsam.illustration }}</span>
             </div>
             <p class="text-xs text-bark-800/80 leading-relaxed mb-3 font-semibold">{{ exp.balsam.desc }}</p>
 

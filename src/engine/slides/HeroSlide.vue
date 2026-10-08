@@ -50,11 +50,6 @@ async function activate() {
 
 <template>
   <div class="px-6 text-center max-w-5xl mx-auto w-full">
-    <!-- 装备包装饰贴纸（预留） -->
-    <div v-if="data.equipment.img" class="absolute -top-4 left-4 lg:left-12 hidden md:block w-32 h-32 pointer-events-none z-20 animate-float">
-      <img :src="data.equipment.img" :alt="data.equipment.title" class="w-full h-full object-contain" />
-    </div>
-
     <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-botanical-100 border-2 border-botanical-700 text-botanical-900 text-xs font-bold mb-6 shadow-[2px_2px_0px_#1b3022]">
       <span>{{ data.badge }}</span>
     </div>
@@ -72,13 +67,10 @@ async function activate() {
       <div class="paper-card p-5 bg-paper-100 flex flex-col justify-between relative overflow-hidden">
         <div class="flex items-center justify-between mb-2">
           <span class="tag-stamp text-[10px] font-cute">{{ data.equipment.label }}</span>
-          <span class="text-[10px] font-bold text-autumn-600 bg-autumn-400/20 px-2 py-0.5 rounded">AI画框图画</span>
         </div>
-        <div class="relative w-full h-40 rounded-xl overflow-hidden border-2 border-dashed border-bark-800 bg-paper-200 flex flex-col items-center justify-center p-2 text-center my-2">
-          <img v-if="data.equipment.img" :src="data.equipment.img" :alt="data.equipment.title" class="w-full h-full object-cover rounded-lg" />
-          <p v-else class="text-[10px] text-bark-800/50 font-bold leading-tight px-2">🖼️ 插图待生成<br />{{ data.equipment.prompt }}</p>
+        <div class="relative w-full aspect-video rounded-xl overflow-hidden border-2 border-bark-800 bg-paper-200 flex flex-col items-center justify-center text-center my-2">
+          <img v-if="data.equipment.img" :src="data.equipment.img" :alt="data.equipment.title" class="w-full h-full object-cover" />
         </div>
-        <p class="text-[11px] font-bold text-bark-800/80 text-center">{{ data.equipment.note }}</p>
       </div>
 
       <!-- 报到登记卡 -->

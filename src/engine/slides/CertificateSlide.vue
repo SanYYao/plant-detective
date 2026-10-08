@@ -20,6 +20,11 @@ function doPrint() {
         {{ data.stamp }}
       </div>
 
+      <!-- 奖章贴纸 -->
+      <div v-if="data.sticker && data.sticker.img" class="absolute left-6 top-6 w-20 h-20 rounded-full overflow-hidden border-2 border-bark-800 shadow-[3px_3px_0px_#3d2612]">
+        <img :src="data.sticker.img" class="w-full h-full object-cover" />
+      </div>
+
       <div class="inline-block text-4xl mb-1">{{ data.badge }}</div>
       <h2 class="font-cute font-black text-3xl sm:text-5xl text-botanical-900 mb-1">{{ data.title }}</h2>
       <p class="text-xs uppercase font-bold text-autumn-600 tracking-widest mb-5">{{ data.subtitle }}</p>

@@ -1,5 +1,4 @@
 // 案件一：叶子为什么变黄了
-import leafChefSticker from '../../assets/lesson/leaf-chef-sticker.webp'
 import leafChefBaking from '../../assets/lesson/leaf-chef-baking.webp'
 
 export default {
@@ -19,11 +18,9 @@ export default {
     ],
     sliderLeft: '🌱 盛夏 (光照强/温度高)',
     sliderRight: '🍂 深秋 (天冷/光照少)',
-    sticker: { img: leafChefSticker, label: '🎨 无框贴纸：叶子厨师' },
     illustration: {
-      title: '🖼️ AI插画：叶绿素厨师做阳光能量面包',
+      title: '叶绿素阳光厨房',
       img: leafChefBaking,
-      prompt: 'Cute leaf shaped chef baking sunlight in a forest kitchen, fairytale picture book illustration',
     },
     notesTitle: '💡 破案侦探笔记：',
     notes: [

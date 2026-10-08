@@ -8,7 +8,6 @@ export default {
   nav: '6. 问社长',
   data: {
     avatarImg: seniorGreen,
-    avatarLabel: '🎨 社长小绿形象贴纸',
     name: '社长 · 小绿',
     desc: '三年级植物百科答疑组！有任何不懂的植物好奇心，都可以问我。',
     quickLabel: '快捷提问点选：',
