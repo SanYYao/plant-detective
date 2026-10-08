@@ -32,9 +32,10 @@ function doPrint() {
         <p class="text-xs text-bark-800/80 leading-relaxed font-semibold">{{ data.body }}</p>
       </div>
 
-      <div class="paper-card-sm p-4 bg-botanical-900 text-paper-50 text-left max-w-lg mx-auto mb-5 space-y-2">
+      <!-- 深色任务卡：不要用 .paper-card-sm（它的浅色背景会盖掉 bg-botanical-900，导致浅底浅字看不见） -->
+      <div class="p-4 bg-botanical-900 text-paper-50 text-left max-w-lg mx-auto mb-5 space-y-2 rounded-2xl border-2 border-bark-800 shadow-[3px_3px_0px_#3d2612]">
         <h4 class="font-bold text-autumn-400 text-sm">{{ data.homeworkTitle }}</h4>
-        <ul class="text-xs space-y-1.5 pl-5 list-disc font-semibold text-paper-100/90 leading-relaxed">
+        <ul class="text-xs space-y-1.5 pl-5 list-disc font-semibold text-paper-100 leading-relaxed">
           <li v-for="(h, i) in data.homework" :key="i" v-html="mdInline(h)"></li>
         </ul>
       </div>

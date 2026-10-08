@@ -8,6 +8,7 @@ import LeafSlide from './engine/slides/LeafSlide.vue'
 import BreakfastSlide from './engine/slides/BreakfastSlide.vue'
 import SeedSlide from './engine/slides/SeedSlide.vue'
 import FlowerSlide from './engine/slides/FlowerSlide.vue'
+import RootSlide from './engine/slides/RootSlide.vue'
 import ChatSlide from './engine/slides/ChatSlide.vue'
 import CertificateSlide from './engine/slides/CertificateSlide.vue'
 import deck from './decks/plant-detective/index.js'
@@ -22,6 +23,7 @@ const registry = {
   breakfast: markRaw(BreakfastSlide),
   seed: markRaw(SeedSlide),
   flower: markRaw(FlowerSlide),
+  root: markRaw(RootSlide),
   chat: markRaw(ChatSlide),
   certificate: markRaw(CertificateSlide),
 }

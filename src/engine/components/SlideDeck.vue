@@ -153,6 +153,19 @@ defineExpose({ goTo, current })
       <component :is="registry[s.type]" :data="s.data" :slide-id="s.id" />
     </section>
 
+    <!-- 进度条：底部中间的小圆点，可点击直接跳段 -->
+    <div class="fixed left-1/2 -translate-x-1/2 bottom-5 z-30 flex items-center gap-2 no-print select-none">
+      <template v-for="(s, i) in slides" :key="s.id">
+        <button
+          class="progress-dot"
+          :class="{ 'is-done': i < current, 'is-current': i === current }"
+          :title="`${i + 1}. ${s.nav || s.id}`"
+          @click="goTo(i)"
+        ></button>
+        <span v-if="i < slides.length - 1" class="progress-link" :class="{ 'is-done': i < current }"></span>
+      </template>
+    </div>
+
     <!-- 尺寸自检（按 D 键切换）：到教室后一键查看实际视口 -->
     <div
       v-if="showDebug"
@@ -162,3 +175,42 @@ defineExpose({ goTo, current })
     </div>
   </div>
 </template>
+
+<style scoped>
+/* ── 底部进度条：◉-◉-◉-○-○ 风格 ── */
+.progress-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(61, 38, 18, 0.3);
+  background: rgba(255, 255, 255, 0.55);
+  cursor: pointer;
+  padding: 0;
+  transition: all 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.progress-dot:hover {
+  transform: scale(1.35);
+  border-color: rgba(61, 38, 18, 0.65);
+}
+.progress-dot.is-done {
+  background: #6f9e5a;
+  border-color: #4d7a3e;
+}
+.progress-dot.is-current {
+  width: 13px;
+  height: 13px;
+  background: #e08a2e;
+  border-color: #3d2612;
+  box-shadow: 0 0 0 3px rgba(224, 138, 46, 0.22);
+}
+.progress-link {
+  width: 10px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: rgba(61, 38, 18, 0.18);
+  transition: background 0.3s;
+}
+.progress-link.is-done {
+  background: #6f9e5a;
+}
+</style>
