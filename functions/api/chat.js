@@ -94,7 +94,34 @@ export const onRequestPost = async ({ request, env }) => {
     });
 
     if (!upstream.ok) {
-      return new Response(JSON.stringify({ reply: '（小绿网络有点忙，先给你本地答案哦）', authorized: true }), { status: 200, headers: CORS });
+      // ── 诊断模式：把上游真实状态码 / CF 机房 / 上游返回片段带出来 ──
+      // 定位完可把 detail 去掉，恢复成纯文案。
+      let snippet = '';
+      try {
+        snippet = (await upstream.text()).slice(0, 200);
+      } catch {
+        snippet = '(读不出上游响应体)';
+      }
+      const colo = (request.cf && request.cf.colo) || 'unknown';
+      console.error('[chat] upstream failed', {
+        status: upstream.status,
+        colo,
+        model,
+        snippet: snippet.slice(0, 120),
+      });
+      return new Response(
+        JSON.stringify({
+          reply: '（小绿网络有点忙，先给你本地答案哦）〔诊断 ' + upstream.status + ' · ' + colo + '〕',
+          authorized: true,
+          detail: {
+            upstreamStatus: upstream.status,
+            colo,
+            model,
+            snippet,
+          },
+        }),
+        { status: 200, headers: CORS }
+      );
     }
 
     const data = await upstream.json();
@@ -104,7 +131,22 @@ export const onRequestPost = async ({ request, env }) => {
     }
     return new Response(JSON.stringify({ reply: reply.trim(), authorized: true }), { status: 200, headers: CORS });
   } catch (err) {
-    return new Response(JSON.stringify({ reply: '（小绿信号被风吹走了，先给你本地答案）', authorized: true }), { status: 200, headers: CORS });
+    // ── 诊断模式：fetch 直接抛异常时（连不上/超时）也把原因带出来 ──
+    const colo = (request.cf && request.cf.colo) || 'unknown';
+    console.error('[chat] upstream threw', { message: String(err && err.message || err), colo, model });
+    return new Response(
+      JSON.stringify({
+        reply: '（小绿信号被风吹走了，先给你本地答案）〔诊断 fetch-threw · ' + colo + '〕',
+        authorized: true,
+        detail: {
+          upstreamStatus: 'fetch-threw',
+          error: String(err && err.message || err),
+          colo,
+          model,
+        },
+      }),
+      { status: 200, headers: CORS }
+    );
   }
 };
 
