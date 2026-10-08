@@ -14,7 +14,10 @@ function doPrint() {
 
 <template>
   <div class="max-w-4xl mx-auto px-6 w-full">
-    <div class="paper-card p-8 sm:p-12 text-center relative bg-gradient-to-b from-paper-50 to-paper-100 border-4 border-bark-800 shadow-[8px_8px_0px_#3d2612]">
+    <div
+      class="paper-card p-8 sm:p-12 text-center relative overflow-hidden bg-gradient-to-b from-paper-50 to-paper-100 border-4 border-bark-800 shadow-[8px_8px_0px_#3d2612]"
+      :style="data.bgImg ? { backgroundImage: `url(${data.bgImg})`, backgroundSize: 'cover', backgroundPosition: 'center' } : null"
+    >
       <!-- 奖章章印 -->
       <div class="absolute right-6 top-6 w-20 h-20 rounded-full border-4 border-autumn-500/30 flex items-center justify-center text-autumn-600 font-cute font-black text-[10px] rotate-12 pointer-events-none uppercase leading-tight whitespace-pre-line">
         {{ data.stamp }}

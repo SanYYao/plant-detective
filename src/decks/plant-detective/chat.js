@@ -1,5 +1,5 @@
 // 社长小绿：AI 问答
-import seniorGreen from '../../assets/lesson/senior-green.webp'
+import seniorGreen from '../../assets/lesson/senior-green.jpeg'
 
 export default {
   id: 'chat',

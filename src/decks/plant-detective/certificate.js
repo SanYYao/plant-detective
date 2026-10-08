@@ -1,5 +1,6 @@
 // 破案证书 + 亲子任务
 import medalSticker from '../../assets/lesson/medal-sticker.webp'
+import certificateBg from '../../assets/lesson/certificate-bg.png'
 
 export default {
   id: 'certificate',
@@ -21,6 +22,7 @@ export default {
       '下节课带到班级分享展示！',
     ],
     printButton: '🖨️ 打印/保存此证书',
+    bgImg: certificateBg,
     sticker: { img: medalSticker },
     footer: '《秋天植物侦探社》自然探秘交互手记 · Designed for Primary Science Education',
   },

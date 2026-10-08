@@ -108,6 +108,8 @@ body {
   header, canvas, .no-print { display: none !important; }
   body.print-cert-only .slide:not([data-slide='certificate']) { display: none !important; }
   body.print-cert-only .slide[data-slide='certificate'] { page-break-after: auto; }
+  /* 打印时保留证书背景图（浏览器默认不打印背景） */
+  .paper-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }
 
 /* ── 可读性（投影 / 远距离观看）：整体加重一档 ── */
