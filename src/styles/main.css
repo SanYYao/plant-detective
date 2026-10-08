@@ -54,17 +54,25 @@ body {
   background-position: 0 0, 15px 15px;
 }
 
+/* 纸卡：暖调纸纹 + 内高光，替代原来的纯白 */
 .paper-card {
-  background: #fcfbf7;
+  background:
+    radial-gradient(circle at 16% 6%, rgba(255, 255, 255, 0.8), transparent 52%),
+    repeating-linear-gradient(45deg, rgba(122, 92, 52, 0.022) 0 2px, transparent 2px 5px),
+    repeating-linear-gradient(-45deg, rgba(122, 92, 52, 0.016) 0 2px, transparent 2px 6px),
+    linear-gradient(158deg, #fdfaf2 0%, #f8f2e4 52%, #f1e8d6 100%);
   border: 2px solid #3d2612;
-  box-shadow: 6px 6px 0px #3d2612;
+  box-shadow: 6px 6px 0px #3d2612, inset 0 1px 0 rgba(255, 255, 255, 0.9);
   border-radius: 1.25rem;
 }
 
 .paper-card-sm {
-  background: #fcfbf7;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255, 255, 255, 0.75), transparent 58%),
+    repeating-linear-gradient(45deg, rgba(122, 92, 52, 0.02) 0 2px, transparent 2px 5px),
+    linear-gradient(160deg, #fdfaf2 0%, #f7f1e3 100%);
   border: 1.5px solid #3d2612;
-  box-shadow: 3px 3px 0px #3d2612;
+  box-shadow: 3px 3px 0px #3d2612, inset 0 1px 0 rgba(255, 255, 255, 0.85);
   border-radius: 0.85rem;
 }
 
